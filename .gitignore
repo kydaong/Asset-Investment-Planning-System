@@ -1,0 +1,68 @@
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Python virtual environment
+venv/
+.venv/
+env/
+ENV/
+
+# Python cache & compiled files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+.eggs/
+
+# pytest / testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.xml
+
+# mypy / type checking
+.mypy_cache/
+.dmypy.json
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# Logs
+*.log
+logs/
+
+# Database files
+*.db
+*.sqlite3
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE / Editor
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Node / Frontend (if added later)
+node_modules/
+.next/
+.nuxt/
+*.local
+
+# Uploads / temp files
+uploads/
+tmp/
+temp/
