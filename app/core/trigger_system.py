@@ -223,22 +223,21 @@ class TriggerSystem:
         """Check if any assets have critically low health scores"""
         try:
             query = f"""
-            SELECT 
-                AssetID, 
-                AVG(HealthScore) as AvgHealth,
-                MIN(HealthScore) as MinHealth,
+            SELECT
+                AssetID,
+                AVG(Availability) as AvgHealth,
+                MIN(Availability) as MinHealth,
                 COUNT(*) as DataPoints
             FROM dbo.AssetPerformanceMetrics
             WHERE Timestamp >= DATEADD(day, -7, GETDATE())
             GROUP BY AssetID
-            HAVING AVG(HealthScore) < {self.thresholds['health_score_min']}
+            HAVING AVG(Availability) < {self.thresholds['health_score_min']}
             ORDER BY AvgHealth ASC
             """
-            
+
             low_health_assets = self.db.execute_query(query)
-            
+
             if low_health_assets:
-                # Determine severity
                 critical_assets = [a for a in low_health_assets if a['AvgHealth'] < self.thresholds['health_score_critical']]
                 
                 severity = "critical" if critical_assets else "high"
@@ -266,26 +265,26 @@ class TriggerSystem:
         """Check if budget is being exceeded"""
         try:
             query = """
-            SELECT 
-                SUM(Amount) as MTDCost,
+            SELECT
+                SUM(TotalCost) as MTDCost,
                 COUNT(*) as TransactionCount
-            FROM dbo.CostTracking
-            WHERE CostDate >= DATEADD(month, DATEDIFF(month, 0, GETDATE()), 0)
+            FROM dbo.OperatingCosts
+            WHERE YearMonth >= DATEADD(month, DATEDIFF(month, 0, GETDATE()), 0)
             """
             
             result = self.db.execute_query(query)
             if result and result[0]['MTDCost']:
-                mtd_cost = result[0]['MTDCost']
-                
+                mtd_cost = float(result[0]['MTDCost'] or 0)
+
                 # Get days in month for pro-rating
                 now = datetime.now()
                 days_in_month = (datetime(now.year, now.month % 12 + 1, 1) - timedelta(days=1)).day
                 day_of_month = now.day
-                
+
                 # Monthly budget (configure this)
-                monthly_budget = 500000  # $500K
+                monthly_budget = 500000.0  # $500K
                 prorated_budget = (monthly_budget / days_in_month) * day_of_month
-                
+
                 overrun_amount = mtd_cost - prorated_budget
                 overrun_pct = (overrun_amount / prorated_budget) * 100
                 
@@ -388,16 +387,13 @@ class TriggerSystem:
         """Check for low OEE"""
         try:
             query = f"""
-            SELECT 
-                AssetID,
+            SELECT
+                ProductionLine,
                 AVG(OEE) as AvgOEE,
-                AVG(Availability) as AvgAvailability,
-                AVG(Performance) as AvgPerformance,
-                AVG(Quality) as AvgQuality,
                 COUNT(*) as DataPoints
             FROM dbo.ProductionMetrics
-            WHERE MetricDate >= DATEADD(day, -30, GETDATE())
-            GROUP BY AssetID
+            WHERE Date >= DATEADD(day, -30, GETDATE())
+            GROUP BY ProductionLine
             HAVING AVG(OEE) < {self.thresholds['oee_min']}
             ORDER BY AvgOEE ASC
             """
@@ -410,7 +406,7 @@ class TriggerSystem:
                     "trigger_name": "low_oee",
                     "severity": "medium",
                     "asset_count": len(low_oee),
-                    "assets": [a['AssetID'] for a in low_oee[:10]],
+                    "assets": [a['ProductionLine'] for a in low_oee[:10]],
                     "worst_oee": low_oee[0]['AvgOEE'],
                     "details": low_oee,
                     "investigation_focus": "OEE improvement analysis - identify bottlenecks and recommend optimization",
@@ -462,7 +458,7 @@ class TriggerSystem:
                 SELECT 
                     AssetID,
                     DATEPART(week, Timestamp) as WeekNum,
-                    AVG(HealthScore) as AvgHealth
+                    AVG(Availability) as AvgHealth
                 FROM dbo.AssetPerformanceMetrics
                 WHERE Timestamp >= DATEADD(day, -30, GETDATE())
                 GROUP BY AssetID, DATEPART(week, Timestamp)
@@ -508,12 +504,12 @@ class TriggerSystem:
         try:
             query = """
             WITH MonthlyCosts AS (
-                SELECT 
-                    FORMAT(CostDate, 'yyyy-MM') as Month,
-                    SUM(Amount) as TotalCost
-                FROM dbo.CostTracking
-                WHERE CostDate >= DATEADD(month, -6, GETDATE())
-                GROUP BY FORMAT(CostDate, 'yyyy-MM')
+                SELECT
+                    FORMAT(YearMonth, 'yyyy-MM') as Month,
+                    SUM(TotalCost) as TotalCost
+                FROM dbo.OperatingCosts
+                WHERE YearMonth >= DATEADD(month, -6, GETDATE())
+                GROUP BY FORMAT(YearMonth, 'yyyy-MM')
             ),
             Stats AS (
                 SELECT 
@@ -618,13 +614,13 @@ class TriggerSystem:
         try:
             query = """
             WITH MonthlyCosts AS (
-                SELECT 
-                    FORMAT(ActualDate, 'yyyy-MM') as Month,
-                    SUM(Cost) as TotalCost,
+                SELECT
+                    FORMAT(CompletionDate, 'yyyy-MM') as Month,
+                    SUM(LaborCost + PartsCost + ContractorCost) as TotalCost,
                     COUNT(*) as MaintenanceCount
-                FROM dbo.MaintenanceRecords
-                WHERE ActualDate >= DATEADD(month, -6, GETDATE())
-                GROUP BY FORMAT(ActualDate, 'yyyy-MM')
+                FROM dbo.MaintenanceHistory
+                WHERE CompletionDate >= DATEADD(month, -6, GETDATE())
+                GROUP BY FORMAT(CompletionDate, 'yyyy-MM')
             )
             SELECT 
                 Month,
@@ -689,13 +685,11 @@ class TriggerSystem:
         """Check for strategic goals that are at risk"""
         try:
             query = """
-            SELECT 
+            SELECT
                 GoalID,
                 GoalName,
                 Category,
                 Status,
-                Priority,
-                ProgressPercentage,
                 TargetValue,
                 CurrentValue,
                 Unit,
@@ -703,31 +697,22 @@ class TriggerSystem:
                 Owner
             FROM dbo.StrategicGoals
             WHERE Status IN ('Behind', 'At Risk')
-              AND Priority IN ('Critical', 'High')
               AND TargetDate >= GETDATE()
-            ORDER BY 
-                CASE Priority 
-                    WHEN 'Critical' THEN 1 
-                    WHEN 'High' THEN 2 
-                END,
-                ProgressPercentage ASC
+            ORDER BY TargetDate ASC
             """
-            
+
             at_risk_goals = self.db.execute_query(query)
-            
+
             if at_risk_goals:
-                critical_count = len([g for g in at_risk_goals if g['Priority'] == 'Critical'])
-                
                 return {
                     "trigger_type": "strategic",
                     "trigger_name": "goals_at_risk",
-                    "severity": "critical" if critical_count > 0 else "high",
+                    "severity": "high",
                     "goal_count": len(at_risk_goals),
-                    "critical_goal_count": critical_count,
                     "goals": at_risk_goals,
                     "categories_affected": list(set([g['Category'] for g in at_risk_goals])),
                     "investigation_focus": "Strategic goal achievement analysis - identify barriers and recommend corrective actions",
-                    "priority": 1 if critical_count > 0 else 2,
+                    "priority": 2,
                     "triggered_at": datetime.now().isoformat()
                 }
         except Exception as e:
@@ -739,30 +724,24 @@ class TriggerSystem:
         """Check for goals that are falling behind schedule"""
         try:
             query = """
-            SELECT 
+            SELECT
                 GoalID,
                 GoalName,
                 Category,
-                ProgressPercentage,
+                Status,
+                TargetValue,
+                CurrentValue,
                 TargetDate,
-                DATEDIFF(day, GETDATE(), TargetDate) as DaysRemaining,
-                DATEDIFF(day, StartDate, GETDATE()) as DaysElapsed,
-                DATEDIFF(day, StartDate, TargetDate) as TotalDays
+                Owner,
+                DATEDIFF(day, GETDATE(), TargetDate) as DaysRemaining
             FROM dbo.StrategicGoals
             WHERE Status = 'Behind'
               AND TargetDate >= GETDATE()
-              AND ProgressPercentage < 50
             """
-            
+
             behind_goals = self.db.execute_query(query)
-            
+
             if behind_goals:
-                # Calculate expected progress vs actual
-                for goal in behind_goals:
-                    if goal['TotalDays'] > 0:
-                        expected_progress = (goal['DaysElapsed'] / goal['TotalDays']) * 100
-                        goal['progress_gap'] = expected_progress - goal['ProgressPercentage']
-                
                 return {
                     "trigger_type": "strategic",
                     "trigger_name": "goals_behind_schedule",

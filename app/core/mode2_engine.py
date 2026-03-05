@@ -1,10 +1,12 @@
 import anthropic
 import os
+import sys
 import asyncio
 import json
 import traceback
 from datetime import datetime
 from typing import List, Dict, Any, Optional
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 from app.core.database import SQLServerConnection
 from app.mcp.sql_tools import SQLToolsProvider
 from app.core.investigation_memory import InvestigationMemory
@@ -140,50 +142,50 @@ IMPORTANT: Actually USE the tools - don't just describe what you would do. Query
         findings = {"data": [], "observations": []}
         
         try:
+            messages = [{"role": "user", "content": investigation_prompt}]
+
             # Claude investigates with tools
             response = self.client.messages.create(
                 model="claude-sonnet-4-6",
                 max_tokens=4000,
                 tools=self.sql_tools.get_tool_definitions(),
-                messages=[{"role": "user", "content": investigation_prompt}]
+                messages=messages
             )
-            
+
             # Process tool use
             while response.stop_reason == "tool_use":
                 tool_results = []
-                
+
                 for content_block in response.content:
                     if content_block.type == "tool_use":
                         tool_name = content_block.name
                         tool_input = content_block.input
-                        
+
                         print(f"      🔧 Using tool: {tool_name}")
-                        
-                        # Execute tool
+
                         result = self.sql_tools.execute_tool(tool_name, tool_input)
-                        
+
                         findings["data"].append({
                             "tool": tool_name,
                             "input": tool_input,
                             "result": result
                         })
-                        
+
                         tool_results.append({
                             "type": "tool_result",
                             "tool_use_id": content_block.id,
                             "content": str(result)
                         })
-                
-                # Continue conversation with tool results
+
+                # Append assistant response and tool results to messages
+                messages.append({"role": "assistant", "content": [block.model_dump(exclude_none=True) for block in response.content]})
+                messages.append({"role": "user", "content": tool_results})
+
                 response = self.client.messages.create(
                     model="claude-sonnet-4-6",
                     max_tokens=4000,
                     tools=self.sql_tools.get_tool_definitions(),
-                    messages=[
-                        {"role": "user", "content": investigation_prompt},
-                        {"role": "assistant", "content": response.content},
-                        {"role": "user", "content": tool_results}
-                    ]
+                    messages=messages
                 )
             
             # Extract final observations
@@ -257,17 +259,22 @@ If no significant insights, return empty array []."""
                 if hasattr(block, "text"):
                     response_text += block.text
             
-            # Parse JSON - Remove markdown
+            # Parse JSON - strip markdown and extract array
             response_text = response_text.strip()
             if response_text.startswith("```json"):
                 response_text = response_text[7:]
             if response_text.startswith("```"):
                 response_text = response_text[3:]
-            if response_text.endswith("```"):
-                response_text = response_text[:-3]
-            
+            if "```" in response_text:
+                response_text = response_text[:response_text.index("```")]
             response_text = response_text.strip()
-            
+
+            # Extract only the JSON array portion
+            start = response_text.find("[")
+            end = response_text.rfind("]") + 1
+            if start != -1 and end > start:
+                response_text = response_text[start:end]
+
             insights = json.loads(response_text)
             
             # Add timestamp

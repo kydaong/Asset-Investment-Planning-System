@@ -98,7 +98,7 @@ class SQLServerConnection:
         Returns:
             List of dictionaries, one per row
         """
-        if not query.strip().upper().startswith("SELECT"):
+        if not query.strip().upper().startswith(("SELECT", "WITH")):
             raise ValueError("Only SELECT queries are allowed")
         
         try:

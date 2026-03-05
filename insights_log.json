@@ -1,0 +1,14 @@
+[
+  {
+    "insight_id": "INS-2026-001",
+    "title": "Insufficient Data Granularity to Support Quantified Budget Overrun Analysis",
+    "category": "Risk",
+    "observation": "The investigation retrieved 500 records across 6 queried tables, but the findings summary contains no specific cost figures, variance percentages, department breakdowns, or time-series budget vs. actual values. Without these dimensions, no cost driver can be isolated with statistical confidence.",
+    "impact": "Any cost reduction decision made without validated, line-item data risks misallocating remediation effort \u2014 potentially cutting productive spend while leaving true overrun drivers untouched. Budget overruns left unaddressed compound over reporting periods.",
+    "recommendation": "Re-execute the investigation with targeted SQL queries that return: (1) budget vs. actual spend by cost center and period, (2) top 10\u201320 line items by absolute variance, (3) vendor/contract-level expenditure vs. approved PO values, and (4) headcount or resource consumption trends. Filter to the overrun period specifically to reduce noise in the 500-record result set.",
+    "urgency": "high",
+    "confidence": "high",
+    "generated_at": "2026-03-05T18:01:41.682512",
+    "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+  }
+]

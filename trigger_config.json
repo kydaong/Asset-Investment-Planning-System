@@ -1,0 +1,22 @@
+{
+  "time_based": {
+    "enabled": true,
+    "interval_minutes": 30,
+    "daily_summary_time": "08:00"
+  },
+  "threshold_based": {
+    "enabled": true,
+    "check_interval_minutes": 5
+  },
+  "pattern_based": {
+    "enabled": true,
+    "check_interval_minutes": 30
+  },
+  "strategic_based": {
+    "enabled": true,
+    "check_interval_minutes": 60
+  },
+  "user_request": {
+    "enabled": true
+  }
+}
