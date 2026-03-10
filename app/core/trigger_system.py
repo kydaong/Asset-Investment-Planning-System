@@ -103,34 +103,34 @@ class TriggerSystem:
         """
         all_triggered_events = []
         
-        print("\n🔍 Checking all trigger types...")
+        print("\n Checking all trigger types...")
         
         # 1. Time-based triggers
         if self.config["time_based"]["enabled"]:
             time_triggers = self._check_time_based_triggers()
             if time_triggers:
-                print(f"   ⏰ Time-based: {len(time_triggers)} triggers")
+                print(f"   Time-based: {len(time_triggers)} triggers")
                 all_triggered_events.extend(time_triggers)
         
         # 2. Threshold-based triggers (Event triggers)
         if self.config["threshold_based"]["enabled"]:
             threshold_triggers = self._check_threshold_triggers()
             if threshold_triggers:
-                print(f"   🎯 Threshold-based: {len(threshold_triggers)} triggers")
+                print(f"   Threshold-based: {len(threshold_triggers)} triggers")
                 all_triggered_events.extend(threshold_triggers)
         
         # 3. Pattern-based triggers
         if self.config["pattern_based"]["enabled"]:
             pattern_triggers = self._check_pattern_triggers()
             if pattern_triggers:
-                print(f"   📈 Pattern-based: {len(pattern_triggers)} triggers")
+                print(f"   Pattern-based: {len(pattern_triggers)} triggers")
                 all_triggered_events.extend(pattern_triggers)
         
         # 4. Strategic goal triggers
         if self.config["strategic_based"]["enabled"]:
             strategic_triggers = self._check_strategic_triggers()
             if strategic_triggers:
-                print(f"   🎯 Strategic-based: {len(strategic_triggers)} triggers")
+                print(f"   Strategic-based: {len(strategic_triggers)} triggers")
                 all_triggered_events.extend(strategic_triggers)
         
         # 5. User-requested triggers (checked separately, not here)
@@ -234,10 +234,11 @@ class TriggerSystem:
             HAVING AVG(Availability) < {self.thresholds['health_score_min']}
             ORDER BY AvgHealth ASC
             """
-
+            
             low_health_assets = self.db.execute_query(query)
-
+            
             if low_health_assets:
+                # Determine severity
                 critical_assets = [a for a in low_health_assets if a['AvgHealth'] < self.thresholds['health_score_critical']]
                 
                 severity = "critical" if critical_assets else "high"
@@ -275,16 +276,16 @@ class TriggerSystem:
             result = self.db.execute_query(query)
             if result and result[0]['MTDCost']:
                 mtd_cost = float(result[0]['MTDCost'] or 0)
-
+                
                 # Get days in month for pro-rating
                 now = datetime.now()
                 days_in_month = (datetime(now.year, now.month % 12 + 1, 1) - timedelta(days=1)).day
                 day_of_month = now.day
-
+                
                 # Monthly budget (configure this)
-                monthly_budget = 500000.0  # $500K
+                monthly_budget = 500000  # $500K
                 prorated_budget = (monthly_budget / days_in_month) * day_of_month
-
+                
                 overrun_amount = mtd_cost - prorated_budget
                 overrun_pct = (overrun_amount / prorated_budget) * 100
                 
@@ -397,16 +398,16 @@ class TriggerSystem:
             HAVING AVG(OEE) < {self.thresholds['oee_min']}
             ORDER BY AvgOEE ASC
             """
-            
+
             low_oee = self.db.execute_query(query)
-            
+
             if low_oee:
                 return {
                     "trigger_type": "threshold",
                     "trigger_name": "low_oee",
                     "severity": "medium",
-                    "asset_count": len(low_oee),
-                    "assets": [a['ProductionLine'] for a in low_oee[:10]],
+                    "line_count": len(low_oee),
+                    "lines": [a['ProductionLine'] for a in low_oee[:10]],
                     "worst_oee": low_oee[0]['AvgOEE'],
                     "details": low_oee,
                     "investigation_focus": "OEE improvement analysis - identify bottlenecks and recommend optimization",
@@ -415,7 +416,7 @@ class TriggerSystem:
                 }
         except Exception as e:
             print(f"Error checking OEE: {e}")
-        
+
         return None
     
     # =========================================================================
@@ -455,7 +456,7 @@ class TriggerSystem:
         try:
             query = f"""
             WITH WeeklyHealth AS (
-                SELECT 
+                SELECT
                     AssetID,
                     DATEPART(week, Timestamp) as WeekNum,
                     AVG(Availability) as AvgHealth
@@ -728,12 +729,11 @@ class TriggerSystem:
                 GoalID,
                 GoalName,
                 Category,
-                Status,
+                TargetDate,
+                DATEDIFF(day, GETDATE(), TargetDate) as DaysRemaining,
                 TargetValue,
                 CurrentValue,
-                TargetDate,
-                Owner,
-                DATEDIFF(day, GETDATE(), TargetDate) as DaysRemaining
+                Unit
             FROM dbo.StrategicGoals
             WHERE Status = 'Behind'
               AND TargetDate >= GETDATE()

@@ -18473,6 +18473,48 @@
       "insight_ids": [
         "INS-2026-001"
       ]
+    },
+    {
+      "timestamp": "2026-03-10T11:19:48.558009",
+      "plan": {
+        "focus_area": "Routine system health check",
+        "rationale": "Triggered by: scheduled_investigation (severity: routine)",
+        "trigger_type": "time_based",
+        "trigger_details": {
+          "trigger_type": "time_based",
+          "trigger_name": "scheduled_investigation",
+          "severity": "routine",
+          "interval_minutes": 30,
+          "investigation_focus": "Routine system health check",
+          "priority": 5,
+          "triggered_at": "2026-03-10T11:19:28.185796"
+        },
+        "data_sources": [
+          "Assets",
+          "MaintenanceHistory",
+          "FailureEvents",
+          "OperatingCosts",
+          "ProductionMetrics",
+          "AssetPerformanceMetrics"
+        ],
+        "all_triggers": [
+          {
+            "trigger_type": "time_based",
+            "trigger_name": "scheduled_investigation",
+            "severity": "routine",
+            "interval_minutes": 30,
+            "investigation_focus": "Routine system health check",
+            "priority": 5,
+            "triggered_at": "2026-03-10T11:19:28.185796"
+          }
+        ]
+      },
+      "findings_summary": {
+        "data_points": 11,
+        "focus_area": "Routine system health check"
+      },
+      "insights_count": 0,
+      "insight_ids": []
     }
   ],
   "insights_generated": [
