@@ -253,22 +253,31 @@ class PortfolioBuilder:
         else:
             return f"Preventive replacement of {asset_name} to maintain operational efficiency and avoid future issues."
     
+    # Maps DB integer Priority (1-5) to text labels used by optimizer/filters
+    _PRIORITY_MAP = {5: "Critical", 4: "High", 3: "Medium", 2: "Low", 1: "Low"}
+
     def _normalize_projects(self, projects: List[Dict]) -> List[Dict]:
         """Normalize project field names to standard format"""
         normalized = []
-        
+
         for p in projects:
+            raw_priority = p.get("Priority", 3)
+            if isinstance(raw_priority, int):
+                priority = self._PRIORITY_MAP.get(raw_priority, "Medium")
+            else:
+                priority = raw_priority or "Medium"
+
             normalized.append({
                 "project_id": p.get("ProjectID"),
                 "project_name": p.get("ProjectName"),
                 "asset_id": p.get("AssetID"),
                 "project_type": p.get("ProjectType"),
-                "estimated_cost": p.get("EstimatedCost", 0),
-                "estimated_benefit": p.get("EstimatedBenefit", 0),
-                "npv": p.get("NPV", 0),
-                "irr": p.get("IRR", 0),
+                "estimated_cost": float(p.get("EstimatedCost") or 0),
+                "estimated_benefit": float(p.get("EstimatedBenefit") or 0),
+                "npv": float(p.get("NPV") or 0),
+                "irr": float(p.get("IRR") or 0),
                 "risk_level": p.get("RiskLevel", "Medium"),
-                "priority": p.get("Priority", "Medium"),
+                "priority": priority,
                 "status": p.get("Status", "Proposed"),
                 "description": p.get("Description", "")
             })

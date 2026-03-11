@@ -249,6 +249,103 @@ def populate_production_metrics(db, num_rows=500):
     print(f"✓ Completed: {num_rows} production metrics inserted")
 
 
+def populate_capital_projects(db, num_rows=50):
+    """Populate CapitalProjects table with synthetic project data"""
+    print(f"\nPopulating CapitalProjects table with {num_rows} rows...")
+
+    assets = db.execute_query("SELECT AssetID, AssetType, Criticality FROM dbo.Assets ORDER BY NEWID()")
+    if not assets:
+        print("  No assets found — skipping CapitalProjects population")
+        return
+
+    project_types = ['Upgrade', 'Replacement', 'New Installation', 'Reliability Improvement', 'End-of-Life Replacement']
+    strategic_alignments = ['Cost Reduction', 'Reliability', 'Safety', 'Capacity Expansion', 'Regulatory Compliance']
+    departments = ['Production', 'Utilities', 'Maintenance', 'Engineering']
+    statuses = ['Proposed', 'Under Review', 'Approved']
+
+    # Cost ranges by asset type
+    cost_by_type = {
+        'Compressor': (1500000, 3000000),
+        'Reactor':    (2000000, 4000000),
+        'Turbine':    (2500000, 4500000),
+        'Heat Exchanger': (800000, 1500000),
+        'Separator':  (600000, 1200000),
+        'Pump':       (400000, 900000),
+        'Boiler':     (1200000, 2500000),
+        'Motor':      (80000, 250000),
+        'Valve':      (30000, 100000),
+        'Tank':       (300000, 700000),
+    }
+
+    # Priority mapping: Critical=5, High=4, Medium=3, Low=2
+    priority_by_criticality = {'Critical': 5, 'High': 4, 'Medium': 3, 'Low': 2}
+
+    budget_year = 2025
+    used_assets = set()
+
+    for i in range(1, num_rows + 1):
+        # Pick an asset (prefer unused ones)
+        asset = assets[(i - 1) % len(assets)]
+        asset_id = asset['AssetID']
+        asset_type = asset.get('AssetType', 'Pump')
+        criticality = asset.get('Criticality', 'Medium')
+
+        # Avoid duplicate FK violations by using NULL for repeated assets
+        fk_asset_id = f"'{asset_id}'" if asset_id not in used_assets else 'NULL'
+        used_assets.add(asset_id)
+
+        project_type = random.choice(project_types)
+        lo, hi = cost_by_type.get(asset_type, (200000, 1000000))
+        estimated_cost = round(random.uniform(lo, hi), 2)
+
+        # NPV: positive for most projects
+        annual_benefit = estimated_cost * random.uniform(0.15, 0.35)
+        years = 5
+        discount_rate = 0.10
+        npv = round(sum(annual_benefit / ((1 + discount_rate) ** y) for y in range(1, years + 1)) - estimated_cost, 2)
+        estimated_benefit = round(annual_benefit * years, 2)
+        irr = round((annual_benefit / estimated_cost) * 100, 2)
+        payback = round(estimated_cost / annual_benefit, 2) if annual_benefit > 0 else 99.0
+
+        risk_level = random.choices(['Low', 'Medium', 'High'], weights=[40, 45, 15])[0]
+        priority = priority_by_criticality.get(criticality, 3)
+        status = random.choices(statuses, weights=[50, 30, 20])[0]
+
+        start_date = datetime.now() + timedelta(days=random.randint(30, 365))
+        end_date = start_date + timedelta(days=random.randint(60, 365))
+
+        project_id = f"PROJ-{budget_year}-{i:03d}"
+        project_name = f"{project_type}: {asset_type} {asset_id}"
+        description = f"{project_type} of {asset_id} to improve reliability and reduce operating costs."
+        alignment = random.choice(strategic_alignments)
+        department = random.choice(departments)
+
+        query = f"""
+        INSERT INTO dbo.CapitalProjects
+        (ProjectID, ProjectName, AssetID, ProjectType, Description, StrategicAlignment,
+         EstimatedCost, EstimatedBenefit, NPV, IRR, PaybackPeriod,
+         RiskLevel, Priority, Status, ProposedStartDate, ProposedEndDate, BudgetYear, Department)
+        VALUES
+        ('{project_id}',
+         '{project_name}',
+         {fk_asset_id},
+         '{project_type}',
+         '{description}',
+         '{alignment}',
+         {estimated_cost}, {estimated_benefit}, {npv}, {irr}, {payback},
+         '{risk_level}', {priority}, '{status}',
+         '{start_date.strftime("%Y-%m-%d")}',
+         '{end_date.strftime("%Y-%m-%d")}',
+         {budget_year}, '{department}')
+        """
+        db.execute_write(query)
+
+        if i % 10 == 0:
+            print(f"  Inserted {i} projects...")
+
+    print(f"  Completed: {num_rows} capital projects inserted")
+
+
 def main():
     print("=" * 70)
     print("Asset Intelligence System - Database Population Script")
@@ -274,13 +371,14 @@ def main():
         populate_failure_events(db, 500)
         populate_operating_costs(db, 500)
         populate_production_metrics(db, 500)
+        populate_capital_projects(db, 50)
 
         print("\n" + "=" * 70)
         print("✓ Database population completed successfully!")
         print("=" * 70)
 
         print("\nTable Summary:")
-        tables = ['Assets', 'MaintenanceHistory', 'FailureEvents', 'OperatingCosts', 'ProductionMetrics']
+        tables = ['Assets', 'MaintenanceHistory', 'FailureEvents', 'OperatingCosts', 'ProductionMetrics', 'CapitalProjects']
         for table in tables:
             count = db.get_row_count(f'dbo.{table}')
             print(f"  {table}: {count:,} rows")

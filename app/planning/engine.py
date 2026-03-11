@@ -5,9 +5,53 @@ Interactive portfolio optimization with Claude
 import anthropic
 import os
 import json
+import re
 import time
 from typing import List, Dict, Any, Optional
 from datetime import datetime
+
+
+# ANSI color codes
+class _C:
+    RESET  = "\033[0m"
+    BOLD   = "\033[1m"
+    RED    = "\033[91m"
+    ORANGE = "\033[33m"
+    YELLOW = "\033[93m"
+    GREEN  = "\033[92m"
+    CYAN   = "\033[96m"
+    GREY   = "\033[90m"
+
+
+# Keyword → color mapping for status indicators
+_STATUS_COLORS = {
+    # Priority / criticality
+    "Critical": _C.RED    + _C.BOLD,
+    "High":     _C.ORANGE + _C.BOLD,
+    "Medium":   _C.YELLOW,
+    "Low":      _C.GREEN,
+    # Risk
+    "High Risk":    _C.RED,
+    "Medium Risk":  _C.YELLOW,
+    "Low Risk":     _C.GREEN,
+    # Project status
+    "Approved":     _C.GREEN  + _C.BOLD,
+    "Under Review": _C.YELLOW,
+    "Proposed":     _C.CYAN,
+    "Deferred":     _C.GREY,
+}
+
+_STATUS_PATTERN = re.compile(
+    r'\b(' + '|'.join(re.escape(k) for k in _STATUS_COLORS) + r')\b'
+)
+
+
+def colorize(text: str) -> str:
+    """Apply ANSI color codes to status/priority keywords in text."""
+    def _replace(m):
+        word = m.group(1)
+        return _STATUS_COLORS[word] + word + _C.RESET
+    return _STATUS_PATTERN.sub(_replace, text)
 
 from app.core.database import SQLServerConnection
 from app.mcp.sql_tools import SQLToolsProvider
@@ -126,7 +170,7 @@ class Mode3Engine:
         return {
             "session_id": session_id,
             "portfolio": portfolio,
-            "message": initial_message,
+            "message": colorize(initial_message),
             "candidate_count": len(candidate_projects),
             "selected_count": portfolio["project_count"],
             "deferred_count": len(portfolio["deferred_projects"])
@@ -172,7 +216,10 @@ class Mode3Engine:
         print("Claude is analyzing your request...")
         response = self._call_claude_for_planning(context, user_message, session)
         
-        # Add Claude's response to history
+        # Colorize status keywords before returning
+        response["message"] = colorize(response["message"])
+
+        # Add Claude's response to history (plain text, no ANSI codes)
         self.session_manager.add_conversation(
             session_id,
             "assistant",
@@ -226,7 +273,7 @@ Generate a response that:
 4. Invites the user to iterate ("What if..." scenarios)
 
 Keep it professional, concise, and actionable. Use bullet points sparingly - prefer prose.
-Format numbers with commas and dollar signs."""
+Format numbers with commas and dollar signs. Do not use any emojis or icons."""
 
         try:
             response = self._call_claude_with_retry(

@@ -21,8 +21,8 @@ def test_mode3_session():
     # Initialize Mode 3
     engine = Mode3Engine()
     
-    # Start session with $15M budget
-    print("\n🚀 Starting planning session...")
+    # Start session with $15M budget. define filter conditions under "additional_params"
+    print("\n Starting planning session...")
     result = engine.start_session(
         user_id="test_user",
         budget=15000000,  # $15M
