@@ -58,6 +58,7 @@ from app.mcp.sql_tools import SQLToolsProvider
 from app.planning.optimization import OptimizationEngine
 from app.planning.portfolio_builder import PortfolioBuilder
 from app.planning.session_manager import SessionManager
+from app.planning.insights_loader import InsightsLoader
 
 
 class Mode3Engine:
@@ -76,6 +77,7 @@ class Mode3Engine:
         self.optimizer = OptimizationEngine()
         self.portfolio_builder = PortfolioBuilder()
         self.session_manager = SessionManager()
+        self.insights_loader = InsightsLoader()
     
     def start_session(
         self,
@@ -122,6 +124,18 @@ class Mode3Engine:
             session_id,
             {"all_candidate_projects": candidate_projects}
         )
+
+        # Load Mode 2 intelligence and attach to session
+        print("\n Loading Mode 2 intelligence...")
+        mode2_insights = self.insights_loader.load(max_days=30, max_insights=20)
+        mode2_summary = self.insights_loader.get_summary(mode2_insights)
+        self.session_manager.update_session(session_id, {"mode2_insights": mode2_summary})
+        if mode2_insights:
+            print(f"  {len(mode2_insights)} insights loaded "
+                  f"({mode2_summary['by_urgency'].get('critical', 0)} critical, "
+                  f"{mode2_summary['by_urgency'].get('high', 0)} high urgency)")
+        else:
+            print("  No recent Mode 2 insights found")
 
         # Apply filters if specified
         if additional_params and "filters" in additional_params:
@@ -257,6 +271,10 @@ class Mode3Engine:
         Generate Claude's initial portfolio explanation
         """
         
+        # Load Mode 2 insights for initial explanation
+        mode2_insights = self.insights_loader.load(max_days=30, max_insights=10)
+        mode2_context = self.insights_loader.format_for_context(mode2_insights)
+
         prompt = f"""You are a capital planning advisor. Generate a clear, professional explanation of this optimized portfolio.
 
 PORTFOLIO DETAILS:
@@ -272,11 +290,14 @@ SELECTED PROJECTS:
 DEFERRED PROJECTS:
 {len(portfolio['deferred_projects'])} projects deferred
 
+{mode2_context}
+
 Generate a response that:
 1. Summarizes the portfolio in 2-3 sentences
-2. Highlights top 3-5 high-priority projects with brief rationale
+2. Highlights top 3-5 high-priority projects with brief rationale, referencing Mode 2 intelligence where relevant (e.g. if an insight flags a risk or production shortfall that a project addresses)
 3. Mentions key metrics (NPV, IRR, budget utilization)
-4. Invites the user to iterate ("What if..." scenarios)
+4. Notes any critical or high-urgency Mode 2 insights that should influence prioritization
+5. Invites the user to iterate ("What if..." scenarios)
 
 Keep it professional, concise, and actionable. Use bullet points sparingly - prefer prose.
 Format numbers with commas and dollar signs. Do not use any emojis or icons. Do not refer to yourself as Claude — if you must reference the system, use the name AIPI."""
@@ -350,7 +371,13 @@ CONVERSATION HISTORY (last 5 turns):
             role = turn['role'].upper()
             content = turn['content'][:200]  # Truncate long messages
             context += f"\n{role}: {content}...\n"
-        
+
+        # Inject Mode 2 intelligence
+        mode2 = session.get("mode2_insights", {})
+        mode2_insights_list = mode2.get("insights", [])
+        if mode2_insights_list:
+            context += f"\n\n{self.insights_loader.format_for_context(mode2_insights_list)}"
+
         return context
     
     def _call_claude_for_planning(
@@ -383,6 +410,11 @@ CURRENT PORTFOLIO DETAILS:
 {json.dumps(current_portfolio, indent=2, default=str)}
 
 You are an AI capital planning advisor. The user wants to modify or understand their portfolio.
+The planning context above includes MODE 2 INTELLIGENCE — autonomous insights from continuous asset and operational monitoring.
+Use these insights to give smarter, evidence-based responses:
+- If a Mode 2 insight flags a critical risk on an asset, prioritize the project that addresses it
+- If a production shortfall or cost overrun is flagged, factor that into budget and NPV recommendations
+- Reference specific insight titles or findings when justifying portfolio decisions
 
 ANALYZE THE REQUEST:
 1. Does the user want to:
@@ -396,11 +428,11 @@ ANALYZE THE REQUEST:
 2. If modification requested:
    - Determine new constraints
    - Re-optimize portfolio
-   - Explain changes and trade-offs
-   
+   - Explain changes and trade-offs, referencing Mode 2 intelligence where relevant
+
 3. If explanation requested:
    - Provide clear, data-driven answer
-   - Reference specific projects and metrics
+   - Reference specific projects, metrics, and Mode 2 insights
 
 RESPONSE FORMAT:
 {{
