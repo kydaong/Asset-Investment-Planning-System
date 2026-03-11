@@ -1,3 +1,6 @@
+# JSON data files (runtime outputs)
+*.json
+
 # Environment variables
 .env
 .env.*

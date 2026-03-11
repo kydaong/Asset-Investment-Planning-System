@@ -4,6 +4,7 @@ import sys
 import asyncio
 import json
 import traceback
+import time
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
@@ -27,7 +28,7 @@ class Mode2Engine:
         self.db = SQLServerConnection()
         self.sql_tools = SQLToolsProvider(self.db)
         self.investigation_memory = InvestigationMemory()
-        self.trigger_system = TriggerSystem()
+        self.trigger_system = TriggerSystem() 
 
         # Configuration
         self.investigation_interval = int(os.getenv("MODE2_INTERVAL_SECONDS", 900))  # 15 minutes default
@@ -53,7 +54,7 @@ class Mode2Engine:
                 print(f"{'='*70}")
                 
                 # Phase 1: Check triggers
-                triggered_events = self.trigger_system.check_all_triggers()
+                triggered_events = self.trigger_system.check_all_triggers()  #important line. check if anything worth investigating
 
                 if not triggered_events:
                     print("⚠ No triggers fired — nothing to investigate at this time")
@@ -62,6 +63,12 @@ class Mode2Engine:
 
                 focus = self.trigger_system.get_investigation_focus(triggered_events)
                 top_trigger = triggered_events[0]
+
+                # Skip if this focus area was already investigated recently (within 6 hours)
+                if self.investigation_memory.has_investigated_recently(focus, hours=6):
+                    print(f"⏭ Skipping — '{focus}' was already investigated in the last 6 hours")
+                    await asyncio.sleep(self.investigation_interval)
+                    continue
 
                 investigation_plan = {
                     "focus_area": focus,
@@ -83,6 +90,9 @@ class Mode2Engine:
                 print(f"\n🔍 Investigation Complete:")
                 print(f"   Data points analyzed: {len(findings.get('data', []))}")
                 
+                # Pause to avoid hitting the per-minute token rate limit
+                await asyncio.sleep(10)
+
                 # Phase 3: Generate insights
                 insights = await self._generate_insights(findings, investigation_plan)
                 
@@ -127,17 +137,28 @@ class Mode2Engine:
         investigation_prompt = f"""INVESTIGATION PLAN:
 Focus: {plan.get('focus_area')}
 Rationale: {plan.get('rationale')}
-Data Sources: {plan.get('data_sources')}
 
-Execute this investigation by:
-1. Querying relevant data from the database
-2. Analyzing trends, patterns, and anomalies
-3. Comparing current state to baselines
-4. Identifying deviations or opportunities
+DATABASE SCHEMA (do NOT call get_table_schema or list_tables — schema is already provided below):
 
-Use the available MCP tools to gather data. Be thorough and make multiple queries as needed.
+Assets(AssetID, AssetName, AssetType, Manufacturer, ModelNumber, SerialNumber, InstallationDate, DesignLife, Criticality, ReplacementCost, Location, Department, Status)
+MaintenanceHistory(MaintenanceID, AssetID, WorkOrderNumber, MaintenanceType, Description, ScheduledDate, CompletionDate, LaborHours, LaborCost, PartsCost, ContractorCost, Technician, Status, FailureMode, RootCause)
+FailureEvents(FailureID, AssetID, FailureDate, FailureMode, Severity, DowntimeHours, ProductionLoss, RepairCost, RootCause, CorrectiveActions, MTBF)
+OperatingCosts(CostID, AssetID, YearMonth, EnergyCost, MaintenanceCost, LaborCost, MaterialsCost, ContractorCost, OtherCost, TotalCost, BudgetedCost, Variance)
+ProductionMetrics(ProductionID, Date, Shift, ProductionLine, UnitsProduced, TargetUnits, QualityRejects, DowntimeMinutes, OEE, RevenueGenerated)
+AssetPerformanceMetrics(MetricID, AssetID, Timestamp, Availability, Efficiency, Temperature, Pressure, Vibration, FlowRate, PowerConsumption, Runtime)
+StrategicGoals(GoalID, GoalName, MetricName, TargetValue, CurrentValue, Unit, TargetDate, Category, Status, Owner)
+CapitalProjects(ProjectID, ProjectName, AssetID, ProjectType, EstimatedCost, EstimatedBenefit, NPV, IRR, RiskLevel, Priority, Status)
 
-IMPORTANT: Actually USE the tools - don't just describe what you would do. Query the database now."""
+DATABASE: Microsoft SQL Server — T-SQL syntax only:
+- GETDATE() not CURDATE()
+- DATEADD(day, -7, GETDATE()) not DATE_SUB(...)
+- Use SELECT TOP N col FROM table (TOP goes immediately after SELECT, before column names — never at the end)
+- Only SELECT queries — no INSERT, UPDATE, DELETE, or DDL
+- Always use DATEADD/GETDATE() for date ranges — never hardcode date strings like '2026-01-01'
+- If you must use a literal date, use ISO format: CONVERT(date, '2026-01-01', 23)
+
+Execute this investigation by running targeted SELECT queries. Make at most 4 queries total — be specific and focused.
+Query the data now using execute_sql."""
 
         findings = {"data": [], "observations": []}
         
@@ -145,15 +166,19 @@ IMPORTANT: Actually USE the tools - don't just describe what you would do. Query
             messages = [{"role": "user", "content": investigation_prompt}]
 
             # Claude investigates with tools
-            response = self.client.messages.create(
+            response = self._call_claude_with_retry(
                 model="claude-sonnet-4-6",
                 max_tokens=4000,
                 tools=self.sql_tools.get_tool_definitions(),
                 messages=messages
             )
 
-            # Process tool use
-            while response.stop_reason == "tool_use":
+            # Process tool use (cap at 8 rounds to prevent runaway loops)
+            max_tool_rounds = 8
+            tool_round = 0
+            while response.stop_reason == "tool_use" and tool_round < max_tool_rounds:
+                tool_round += 1
+                print(f"      [Tool round {tool_round}/{max_tool_rounds}]")
                 tool_results = []
 
                 for content_block in response.content:
@@ -171,17 +196,20 @@ IMPORTANT: Actually USE the tools - don't just describe what you would do. Query
                             "result": result
                         })
 
+                        # Truncate large results to reduce token usage
+                        result_str = self._truncate_result(result)
+
                         tool_results.append({
                             "type": "tool_result",
                             "tool_use_id": content_block.id,
-                            "content": str(result)
+                            "content": result_str
                         })
 
                 # Append assistant response and tool results to messages
                 messages.append({"role": "assistant", "content": [block.model_dump(exclude_none=True) for block in response.content]})
                 messages.append({"role": "user", "content": tool_results})
 
-                response = self.client.messages.create(
+                response = self._call_claude_with_retry(
                     model="claude-sonnet-4-6",
                     max_tokens=4000,
                     tools=self.sql_tools.get_tool_definitions(),
@@ -247,7 +275,7 @@ Respond with JSON array:
 If no significant insights, return empty array []."""
 
         try:
-            response = self.client.messages.create(
+            response = self._call_claude_with_retry(
                 model="claude-sonnet-4-6",
                 max_tokens=3000,
                 messages=[{"role": "user", "content": insight_prompt}]
@@ -332,21 +360,63 @@ If no significant insights, return empty array []."""
         except Exception as e:
             print(f"Error saving insight: {e}")
     
+    def _call_claude_with_retry(self, max_retries: int = 3, wait_seconds: int = 65, **kwargs):
+        """Call Claude API with retry on rate limit (429) errors"""
+        for attempt in range(max_retries):
+            try:
+                return self.client.messages.create(**kwargs)
+            except Exception as e:
+                is_rate_limit = (
+                    isinstance(e, anthropic.RateLimitError) or
+                    (hasattr(e, 'status_code') and e.status_code == 429) or
+                    "rate_limit_error" in str(e)
+                )
+                if is_rate_limit and attempt < max_retries - 1:
+                    print(f"      ⏳ Rate limit hit — waiting {wait_seconds}s before retry ({attempt + 1}/{max_retries})...")
+                    time.sleep(wait_seconds)
+                else:
+                    raise
+
+    def _truncate_result(self, result: Any, max_rows: int = 20, max_chars: int = 3000) -> str:
+        """Truncate large SQL results to reduce token usage"""
+        if isinstance(result, list):
+            truncated = result[:max_rows]
+            result_str = json.dumps(truncated, default=str)
+            if len(result) > max_rows:
+                result_str += f"\n... (showing {max_rows} of {len(result)} rows)"
+        else:
+            result_str = str(result)
+
+        if len(result_str) > max_chars:
+            result_str = result_str[:max_chars] + "\n... (truncated)"
+
+        return result_str
+
     def _format_findings(self, findings: Dict) -> str:
-        """Format findings for prompt"""
+        """Format findings for prompt — include actual data so Claude can reason about it"""
         formatted = []
-        
+
         for item in findings.get("data", []):
             tool = item.get("tool")
+            query = item.get("input", {}).get("query", "")
             result = item.get("result", [])
 
             if isinstance(result, list):
-                data_summary = f"{len(result)} records"
+                # Include up to 10 rows of actual data
+                sample = result[:10]
+                data_str = json.dumps(sample, default=str, indent=2)
+                suffix = f"\n  ... ({len(result)} rows total)" if len(result) > 10 else ""
+                formatted.append(f"Query: {query}\nResults ({len(result)} rows):\n{data_str}{suffix}")
+            elif isinstance(result, dict) and "error" in result:
+                formatted.append(f"Query: {query}\nError: {result['error']}")
             else:
-                data_summary = str(result)
-            formatted.append(f"- {tool}: {data_summary}")
-        
-        return "\n".join(formatted) if formatted else "No data gathered"
+                formatted.append(f"Query: {query}\nResult: {result}")
+
+        # Also include Claude's own observations from the investigation
+        for obs in findings.get("observations", []):
+            formatted.append(f"Observation:\n{obs}")
+
+        return "\n\n---\n\n".join(formatted) if formatted else "No data gathered"
 
 
 # Entry point for running Mode 2

@@ -56,7 +56,12 @@ class SQLToolsProvider:
     def execute_tool(self, tool_name: str, tool_input: Dict) -> Any:
         """Execute a tool call from Claude and return the result"""
         if tool_name == "execute_sql":
-            return self.db.execute_query(tool_input["query"])
+            try:
+                return self.db.execute_query(tool_input["query"])
+            except ValueError as e:
+                return {"error": str(e), "note": "Only SELECT queries are permitted. Do not use INSERT, UPDATE, DELETE, or DDL statements."}
+            except Exception as e:
+                return {"error": str(e), "note": "Fix the SQL syntax and retry. Use T-SQL: SELECT TOP N col FROM table (TOP after SELECT), GETDATE(), DATEADD(). Never use LIMIT, CURDATE(), or hardcoded date strings."}
 
         elif tool_name == "list_tables":
             return self.db.list_tables()
