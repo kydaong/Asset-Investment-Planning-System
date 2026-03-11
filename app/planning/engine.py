@@ -275,7 +275,7 @@ class Mode3Engine:
         mode2_insights = self.insights_loader.load(max_days=30, max_insights=10)
         mode2_context = self.insights_loader.format_for_context(mode2_insights)
 
-        prompt = f"""You are a capital planning advisor. Generate a clear, professional explanation of this optimized portfolio.
+        prompt = f"""You are AIPI, a capital planning advisor. Generate a clear, professional explanation of this optimized portfolio.
 
 PORTFOLIO DETAILS:
 Budget: ${budget:,.0f}

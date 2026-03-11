@@ -250,5 +250,65 @@
     "confidence": "medium",
     "generated_at": "2026-03-10T14:00:30.625464",
     "investigation_focus": "Strategic goal achievement analysis - identify barriers and recommend corrective actions"
+  },
+  {
+    "insight_id": "INS-2026-001",
+    "title": "Compressor 19 Repair Costs Exceed Replacement Value by 124% \u2014 Immediate Decommission Required",
+    "category": "Risk",
+    "observation": "Compressor 19 (Maintenance Dept, High Criticality) has accumulated $187,242 in repair costs over the last 12 months against a replacement cost of only $150,938 \u2014 a repair-to-replacement ratio of 124.1%. It has failed 3 times, generating 189.5 hours of downtime and $328,782 in production loss. Average MTBF of 192 hours signals continued accelerating failure frequency.",
+    "impact": "Continuing to operate Compressor 19 costs an estimated $187K/yr in repairs alone, plus $328K in production loss \u2014 totalling over $515K in annual value destruction. Replacement eliminates this spiral and recovers the asset's productive capacity. Every additional month of inaction adds approximately $43K in combined repair and lost production costs.",
+    "recommendation": "Initiate capital replacement of Compressor 19 within 30 days. Procure replacement unit immediately and schedule decommission during the next planned outage window. In the interim, place the asset on enhanced monitoring and establish a contingency plan to reroute production load if a 4th failure occurs before replacement is complete.",
+    "urgency": "critical",
+    "confidence": "high",
+    "generated_at": "2026-03-11T17:56:11.135691",
+    "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+  },
+  {
+    "insight_id": "INS-2026-002",
+    "title": "Reactive Maintenance Driving $250K+ in Unplanned Spend Across 10 Assets in 12 Months",
+    "category": "Financial",
+    "observation": "The top 10 assets by emergency and corrective maintenance cost have collectively incurred over $308,924 in reactive work order spend over the past 12 months, with individual incidents averaging $12K\u2013$18K in parts and $7K\u2013$13K in contractor costs per event. Assets including Motor 450 ($36,275), Separator 249 ($36,227), Heat Exchanger 4 ($34,420), and Separator 343 ($33,250) each exceeded $30K in unplanned maintenance spend. Between 12 and 18 assets enter budget overrun every single month, consistently, across all 12 months analyzed.",
+    "impact": "Reactive maintenance is the primary structural driver of the 3.5%\u20136.1% monthly portfolio overrun. Converting the top 10 corrective assets to scheduled preventive maintenance programs is estimated to reduce reactive work order costs by 40\u201360%, representing a potential saving of $123K\u2013$185K annually on these assets alone. Contractor cost reductions from fewer emergency call-outs add a further $50K\u2013$80K in projected savings.",
+    "recommendation": "Within 60 days, establish formal Preventive Maintenance schedules for the top 10 corrective/emergency assets (Motor 450, Separator 249, Heat Exchanger 4, Separator 343, Motor 376, Reactor 46, Valve 66, Pump 200, Motor 82, Motor 272). Prioritize failure mode analysis for assets with 2+ events in 12 months to set appropriate inspection intervals. Simultaneously, pre-position critical spare parts for the highest-incident asset types (separators, motors, heat exchangers) to eliminate $12K\u2013$18K emergency parts procurement spikes.",
+    "urgency": "high",
+    "confidence": "high",
+    "generated_at": "2026-03-11T17:56:11.135691",
+    "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+  },
+  {
+    "insight_id": "INS-2026-003",
+    "title": "Contractor Costs Consuming 17\u201322% of Total Monthly Spend With No Downward Trend",
+    "category": "Financial",
+    "observation": "Contractor costs represent 17\u201322% of total portfolio spend every month across the 12-month window, peaking at $286,440 in November 2025. At the asset level, the top overrunning assets show contractor costs of $10,431\u2013$17,016 per asset annually, comprising 18\u201324% of their individual actual costs. Emergency work orders are generating $7K\u2013$13K in contractor costs per incident \u2014 rates consistent with unplanned, time-critical call-outs rather than negotiated service agreements.",
+    "impact": "Contractor spend is the second-largest cost category after maintenance, running $170K\u2013$286K per month. A 20\u201325% reduction through preferred supplier agreements and selective insourcing of routine corrective work would save approximately $408K\u2013$686K annually across the portfolio. The absence of any downward trend over 12 months confirms this is a structural cost, not a temporary spike.",
+    "recommendation": "Negotiate multi-year preferred contractor rate agreements for the top 3\u20135 contractor suppliers within 90 days, targeting a 20\u201325% reduction on standard call-out rates in exchange for volume commitment. Conduct a skills gap assessment to identify which corrective maintenance tasks (particularly on motors, pumps, and valves) can be insourced to existing maintenance technicians, reducing emergency contractor dependency. Set a target of contractor costs below 12% of total spend within 12 months.",
+    "urgency": "high",
+    "confidence": "high",
+    "generated_at": "2026-03-11T17:56:11.135691",
+    "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+  },
+  {
+    "insight_id": "INS-2026-004",
+    "title": "Low-Criticality Assets Incurring Emergency-Level Costs Indicate Stale Criticality Classifications",
+    "category": "Strategic",
+    "observation": "Four assets classified as Low criticality \u2014 Motor 376 ($31,859 emergency maintenance cost), Separator 343 ($33,250 emergency maintenance cost), Motor 272 ($24,562 emergency maintenance cost), and Reactor 156 ($2,673 budget overrun at 10.8%) \u2014 are generating emergency work orders and budget overruns at rates comparable to or exceeding High-criticality assets. Low-criticality classification typically results in lower maintenance budget allocations, less frequent PM intervals, and lower parts inventory priority, all of which increase the probability and cost of reactive failures.",
+    "impact": "Misclassified assets receive inadequate preventive attention, creating a self-fulfilling cycle of emergency failures and cost overruns. Budget allocations for these assets are structurally undersized relative to their actual maintenance demand, making overruns inevitable regardless of operational performance. Correcting classifications unlocks appropriate PM budgets, inventory stocking, and inspection frequency \u2014 reducing emergency events and aligning budgets to real cost profiles.",
+    "recommendation": "Commission a criticality re-assessment of all assets currently classified as Low or Medium that have incurred emergency or corrective maintenance events exceeding $15K in the past 12 months. Apply a standardized criticality matrix incorporating failure consequence (production impact, safety, cost) rather than relying on potentially outdated legacy classifications. Update maintenance strategies, budget allocations, and spare parts stocking levels to reflect revised criticality ratings within 60 days.",
+    "urgency": "medium",
+    "confidence": "high",
+    "generated_at": "2026-03-11T17:56:11.135691",
+    "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+  },
+  {
+    "insight_id": "INS-2026-005",
+    "title": "Energy Costs on Motors and Heat Exchangers Are Structurally Above Plan \u2014 $20K\u2013$40K Annual Reduction Achievable",
+    "category": "Opportunity",
+    "observation": "Motor 274 (Utilities) is consuming $18,408 in energy annually while running a $2,961 budget overrun. Heat Exchanger 101 (Production) shows $23,754 in energy costs alongside 3 failures and 25.5 hours downtime in 12 months. Across the monthly trend, energy cost is the third-largest spend category at $164K\u2013$289K per month, and remains consistently above or at budget across the highest-overrun assets. Degraded assets with low MTBF (Motor 6 at 51.5 hours average, HX 101 at 126.7 hours) are likely consuming excess energy due to mechanical inefficiency associated with their deteriorating condition.",
+    "impact": "A 10\u201315% reduction in energy costs across the highest-consuming assets (Motor 274, Heat Exchanger 101, Separator 346, Separator 439) would yield $20K\u2013$40K in annual savings. Additionally, resolving the mechanical degradation driving frequent failures on energy-intensive assets (through replacement or overhaul) is likely to simultaneously reduce energy consumption as equipment operates closer to its design efficiency curve.",
+    "recommendation": "Commission energy audits on the top 5 energy-consuming assets within 90 days, with particular focus on Motor 274, Heat Exchanger 101, and assets with MTBF below 150 hours. Measure actual energy consumption against design specifications to quantify efficiency degradation. Where consumption exceeds design spec by more than 15%, trigger either overhaul or capital replacement evaluation. Explore variable speed drive retrofits on motors where load profiles support it, and schedule heat exchanger cleaning/re-tubing programs to restore thermal efficiency on fouled units.",
+    "urgency": "medium",
+    "confidence": "medium",
+    "generated_at": "2026-03-11T17:56:11.135691",
+    "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
   }
 ]
