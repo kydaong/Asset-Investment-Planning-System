@@ -116,7 +116,13 @@ class Mode3Engine:
         candidate_projects = self.portfolio_builder.get_candidate_projects()
         
         print(f"✓ Found {len(candidate_projects)} candidate projects")
-        
+
+        # Save full unfiltered list to session so it's always available for analysis
+        self.session_manager.update_session(
+            session_id,
+            {"all_candidate_projects": candidate_projects}
+        )
+
         # Apply filters if specified
         if additional_params and "filters" in additional_params:
             print("\n Applying filters...")
@@ -213,7 +219,7 @@ class Mode3Engine:
         context = self._build_planning_context(session)
         
         # Get Claude's response
-        print("Claude is analyzing your request...")
+        print("AIPI is analyzing your request...")
         response = self._call_claude_for_planning(context, user_message, session)
         
         # Colorize status keywords before returning
@@ -273,7 +279,7 @@ Generate a response that:
 4. Invites the user to iterate ("What if..." scenarios)
 
 Keep it professional, concise, and actionable. Use bullet points sparingly - prefer prose.
-Format numbers with commas and dollar signs. Do not use any emojis or icons."""
+Format numbers with commas and dollar signs. Do not use any emojis or icons. Do not refer to yourself as Claude — if you must reference the system, use the name AIPI."""
 
         try:
             response = self._call_claude_with_retry(
@@ -358,7 +364,10 @@ CONVERSATION HISTORY (last 5 turns):
         """
         
         current_portfolio = session.get("current_portfolio", {})
-        all_projects = current_portfolio.get("selected_projects", []) + current_portfolio.get("deferred_projects", [])
+        # Use the full unfiltered project list saved at session start, fall back to portfolio projects
+        all_projects = session.get("all_candidate_projects") or (
+            current_portfolio.get("selected_projects", []) + current_portfolio.get("deferred_projects", [])
+        )
         budget = session.get("parameters", {}).get("budget", 0)
         
         # Build planning prompt
@@ -405,6 +414,7 @@ RESPONSE FORMAT:
     }} or null
 }}
 
+The "message" field must be professional prose with no emojis or icons. Do not refer to yourself as Claude — if you must reference the system, use the name AIPI.
 Respond ONLY with valid JSON."""
 
         try:
@@ -481,8 +491,8 @@ Respond ONLY with valid JSON."""
         Apply user-requested modifications to portfolio
         """
         
-        # Get new budget or use current
-        new_budget = modifications.get("new_budget", current_budget)
+        # Get new budget or use current (handle explicit null from AI response)
+        new_budget = modifications.get("new_budget") or current_budget
         
         # Get filters
         filters = modifications.get("filters")
