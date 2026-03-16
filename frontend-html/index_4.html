@@ -1,0 +1,2542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIPI - Asset Intelligence Platform for Industry</title>
+    <style>
+        /* ============================================
+           PROFESSIONAL CSS - Version 3
+           All Issues Fixed + ANSI Stripping + Projects Modal
+           ============================================ */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-600: #2563eb;
+            --primary-700: #1d4ed8;
+            --primary-50: #eff6ff;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --red-500: #ef4444;
+            --red-600: #dc2626;
+            --orange-500: #f59e0b;
+            --yellow-500: #eab308;
+            --yellow-50: #fefce8;
+            --green-500: #10b981;
+            --green-600: #059669;
+            --blue-500: #3b82f6;
+            --purple-500: #8b5cf6;
+            
+            /* Yokogawa brand colors */
+            --yokogawa-blue: #0033a0;
+            --yokogawa-red: #e60012;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.6;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ============================================
+           SIDEBAR
+           ============================================ */
+        
+        .sidebar {
+            width: 260px;
+            background: var(--gray-900);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-260px);
+        }
+
+        .sidebar-toggle {
+            position: absolute;
+            right: -40px;
+            top: 20px;
+            width: 36px;
+            height: 36px;
+            background: var(--gray-900);
+            border: none;
+            border-radius: 0 8px 8px 0;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            z-index: 10;
+            transition: all 0.2s;
+        }
+
+        .sidebar-toggle:hover {
+            background: var(--gray-800);
+            transform: translateX(2px);
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--gray-800);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .yokogawa-logo {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--yokogawa-blue);
+            font-size: 20px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 2px;
+        }
+
+        .logo-subtitle {
+            font-size: 11px;
+            color: var(--gray-400);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .nav {
+            flex: 1;
+            padding: 20px 12px;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            margin-bottom: 4px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--gray-400);
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .nav-item:hover {
+            background: var(--gray-800);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: var(--primary-600);
+            color: white;
+        }
+
+        .nav-icon {
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid var(--gray-800);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary-600);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        /* ============================================
+           MAIN CONTENT - Fixed centering when sidebar collapsed
+           ============================================ */
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: margin-left 0.3s ease;
+        }
+
+        .sidebar.collapsed ~ .main-content {
+            margin-left: -260px;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            color: var(--gray-600);
+            margin-top: 4px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px;
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        /* ============================================
+           BUTTONS
+           ============================================ */
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary-600);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-700);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+        }
+
+        .btn-success {
+            background: var(--green-600);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: var(--green-500);
+        }
+
+        .btn-danger {
+            background: var(--red-600);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ============================================
+           CARDS
+           ============================================ */
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid var(--gray-200);
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        /* ============================================
+           GRID LAYOUTS
+           ============================================ */
+        
+        .grid {
+            display: grid;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .grid-cols-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .grid-cols-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        /* ============================================
+           STAT CARDS
+           ============================================ */
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid var(--gray-200);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+            transform: translateY(-4px);
+            z-index: 10;
+        }
+
+        .stat-card-preview {
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card-detail {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            padding: 24px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stat-card:hover .stat-card-detail {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .stat-card:hover .stat-card-preview {
+            opacity: 0;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 4px;
+        }
+
+        .stat-change {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .stat-change.positive {
+            color: var(--green-600);
+        }
+
+        .stat-change.negative {
+            color: var(--red-600);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+
+        .stat-icon.blue {
+            background: var(--primary-50);
+            color: var(--primary-600);
+        }
+
+        .stat-icon.green {
+            background: #d1fae5;
+            color: var(--green-600);
+        }
+
+        .stat-icon.purple {
+            background: #ede9fe;
+            color: var(--purple-500);
+        }
+
+        /* ============================================
+           INSIGHT CARDS
+           ============================================ */
+        
+        .insights-container {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .insight-card {
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            border-left: 4px solid;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .insight-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateX(4px);
+        }
+
+        .insight-card.critical {
+            border-left-color: var(--red-500);
+            background: #fef2f2;
+        }
+
+        .insight-card.high {
+            border-left-color: var(--orange-500);
+            background: #fff7ed;
+        }
+
+        .insight-card.medium {
+            border-left-color: var(--yellow-500);
+            background: #fefce8;
+        }
+
+        .insight-card.low {
+            border-left-color: var(--blue-500);
+            background: var(--primary-50);
+        }
+
+        .insight-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .insight-title {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--gray-900);
+        }
+
+        .insight-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .insight-badge.critical {
+            background: var(--red-500);
+            color: white;
+        }
+
+        .insight-badge.high {
+            background: var(--orange-500);
+            color: white;
+        }
+
+        .insight-badge.medium {
+            background: var(--yellow-500);
+            color: var(--gray-900);
+        }
+
+        .insight-badge.low {
+            background: var(--blue-500);
+            color: white;
+        }
+
+        .insight-content {
+            font-size: 14px;
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+
+        .insight-meta {
+            display: grid;
+            grid-template-columns: auto auto;
+            gap: 20px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .insight-meta-item {
+            font-size: 13px;
+        }
+
+        .insight-meta-label {
+            font-weight: 600;
+            color: var(--gray-600);
+            margin-bottom: 4px;
+        }
+
+        .insight-meta-value {
+            color: var(--gray-900);
+        }
+
+        /* ============================================
+           ENGINE STATUS INDICATOR
+           ============================================ */
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status-indicator.running {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-indicator.stopped {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.running .status-dot {
+            background: #10b981;
+        }
+
+        .status-indicator.stopped .status-dot {
+            background: #ef4444;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        /* ============================================
+           CHAT INTERFACE (Mode 3)
+           ============================================ */
+        
+        .chat-container {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 24px;
+            height: calc(100vh - 160px);
+        }
+
+        .portfolio-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid var(--gray-200);
+            overflow-y: auto;
+        }
+
+        .portfolio-stat {
+            background: var(--gray-50);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .portfolio-stat-label {
+            font-size: 12px;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .portfolio-stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .portfolio-stat-sub {
+            font-size: 13px;
+            color: var(--gray-600);
+            margin-top: 4px;
+        }
+
+        .chat-panel {
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--gray-200);
+            background: var(--gray-50);
+        }
+
+        .chat-header-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .chat-header-subtitle {
+            font-size: 13px;
+            color: var(--gray-600);
+            margin-top: 2px;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            max-width: 85%;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .message.assistant .message-avatar {
+            background: var(--primary-600);
+            color: white;
+        }
+
+        .message.user .message-avatar {
+            background: var(--green-600);
+            color: white;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-meta {
+            font-size: 12px;
+            color: var(--gray-600);
+            margin-bottom: 6px;
+        }
+
+        .message.user .message-meta {
+            text-align: right;
+        }
+
+        .message-bubble {
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .message.assistant .message-bubble {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        .message.user .message-bubble {
+            background: var(--primary-600);
+            color: white;
+        }
+
+        /* ============================================
+           MESSAGE FORMATTING
+           ============================================ */
+
+        .message-bubble p {
+            margin: 0 0 12px 0;
+        }
+
+        .message-bubble p:last-child {
+            margin-bottom: 0;
+        }
+
+        .msg-section-header {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin: 16px 0 8px 0;
+            padding-bottom: 4px;
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        .message.user .msg-section-header {
+            color: white;
+            border-bottom-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .msg-list-item {
+            margin: 8px 0 8px 0;
+            padding-left: 8px;
+            line-height: 1.6;
+        }
+
+        .msg-list-number {
+            font-weight: 700;
+            color: var(--primary-600);
+            margin-right: 4px;
+        }
+
+        .message.user .msg-list-number {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .msg-bullet-item {
+            margin: 6px 0 6px 16px;
+            line-height: 1.6;
+        }
+
+        .msg-project {
+            display: inline-block;
+            margin: 4px 0;
+        }
+
+        .msg-project strong {
+            color: var(--gray-900);
+        }
+
+        .message.user .msg-project strong {
+            color: white;
+        }
+
+        .msg-cost {
+            color: var(--primary-600);
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .message.user .msg-cost {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .msg-currency {
+            font-weight: 700;
+            color: var(--green-600);
+            white-space: nowrap;
+        }
+
+        .message.user .msg-currency {
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 600;
+        }
+
+        .msg-percentage {
+            font-weight: 600;
+            color: var(--blue-500);
+        }
+
+        .message.user .msg-percentage {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .message-bubble strong {
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .message.user .message-bubble strong {
+            color: white;
+            font-weight: 700;
+        }
+
+        .msg-table {
+            width: 100%;
+            margin: 12px 0;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .msg-table th {
+            background: var(--gray-100);
+            padding: 8px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--gray-300);
+        }
+
+        .msg-table td {
+            padding: 8px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .message.user .msg-table th {
+            background: rgba(255, 255, 255, 0.2);
+            border-bottom-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .message.user .msg-table td {
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .portfolio-update {
+            background: #dbeafe;
+            border-left: 4px solid var(--primary-600);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #1e40af;
+        }
+
+        .portfolio-update-title {
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .portfolio-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .metric {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 11px;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e40af;
+        }
+
+        .chat-input {
+            padding: 20px 24px;
+            border-top: 1px solid var(--gray-200);
+            background: white;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .chat-textarea {
+            flex: 1;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: none;
+            min-height: 48px;
+            max-height: 120px;
+        }
+
+        .chat-textarea:focus {
+            outline: none;
+            border-color: var(--primary-600);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .session-loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .session-loading.active {
+            display: block;
+        }
+
+        .session-loading-spinner {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            font-size: 48px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .loading-text {
+            font-size: 16px;
+            color: var(--gray-600);
+            margin-top: 12px;
+        }
+
+        .loading-subtext {
+            font-size: 14px;
+            color: var(--gray-500);
+            margin-top: 8px;
+        }
+
+        /* ============================================
+           TABLES
+           ============================================ */
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead {
+            background: var(--gray-50);
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            font-weight: 600;
+            color: var(--gray-700);
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        tbody tr:hover {
+            background: var(--gray-50);
+        }
+
+        /* ============================================
+           BADGES
+           ============================================ */
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.critical {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge.high {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge.medium {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge.low {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        /* ============================================
+           LOADING & EMPTY STATES
+           ============================================ */
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--gray-500);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--gray-200);
+            border-top-color: var(--primary-600);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        /* ============================================
+           PROJECTS MODAL
+           ============================================ */
+
+        .projects-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .projects-modal.active {
+            display: flex;
+        }
+
+        .projects-modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 1200px;
+            width: 95%;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .projects-modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .projects-modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .close-modal-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray-600);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .close-modal-btn:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        .projects-modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .project-card {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.2s;
+        }
+
+        .project-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .project-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .project-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .project-priority {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .project-priority.critical {
+            background: var(--red-500);
+            color: white;
+        }
+
+        .project-priority.high {
+            background: var(--orange-500);
+            color: white;
+        }
+
+        .project-priority.medium {
+            background: var(--blue-500);
+            color: white;
+        }
+
+        .project-priority.low {
+            background: var(--green-500);
+            color: white;
+        }
+
+        .project-metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .project-metric {
+            text-align: center;
+        }
+
+        .project-metric-label {
+            font-size: 11px;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .project-metric-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .project-description {
+            font-size: 14px;
+            color: var(--gray-700);
+            line-height: 1.6;
+            margin-top: 12px;
+        }
+
+        /* ============================================
+           SCROLLBAR
+           ============================================ */
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-300);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-400);
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        
+        @media (max-width: 1024px) {
+            .grid-cols-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .chat-container {
+                grid-template-columns: 1fr;
+            }
+
+            .portfolio-panel {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar:not(.collapsed) {
+                position: absolute;
+                z-index: 100;
+                height: 100vh;
+            }
+
+            .grid-cols-3,
+            .grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .project-metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ============================================
+           FORM ELEMENTS
+           ============================================ */
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-600);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* ============================================
+           MODAL
+           ============================================ */
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- ============================================
+             SIDEBAR
+             ============================================ -->
+        <aside class="sidebar" id="sidebar">
+            <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle sidebar">
+                <span id="sidebar-toggle-icon">◀</span>
+            </button>
+
+            <div class="sidebar-header">
+                <div class="yokogawa-logo">Y</div>
+                <div class="logo-container">
+                    <div>
+                        <div class="logo">AIPI</div>
+                        <div class="logo-subtitle">Asset Intelligence</div>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="nav">
+                <div class="nav-item active" onclick="switchView('dashboard')">
+                    <span class="nav-icon">▦</span>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" onclick="switchView('mode2')">
+                    <span class="nav-icon">⚡</span>
+                    <span>Autonomous Intelligence</span>
+                </div>
+                <div class="nav-item" onclick="switchView('mode3')">
+                    <span class="nav-icon">💼</span>
+                    <span>Collaborative Planning</span>
+                </div>
+                <div class="nav-item" onclick="switchView('history')">
+                    <span class="nav-icon">⊞</span>
+                    <span>History</span>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">D</div>
+                    <div>
+                        <div class="user-name">Dalton</div>
+                        <div class="user-role">Solutions Engineer</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ============================================
+             MAIN CONTENT
+             ============================================ -->
+        <main class="main-content">
+            <!-- DASHBOARD VIEW -->
+            <div id="dashboard-view" class="view active">
+                <div class="header">
+                    <div>
+                        <h1 class="header-title">Dashboard</h1>
+                        <p class="header-subtitle">System overview and recent insights</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" onclick="refreshInsights()" title="Check for new insights">
+                            ↻ Insights Read
+                        </button>
+                        <button class="btn btn-secondary" onclick="refreshDashboard()">⟳ Refresh</button>
+                    </div>
+                </div>
+
+                <div class="content">
+                    <div class="grid grid-cols-3">
+                        <div class="stat-card">
+                            <div class="stat-card-preview">
+                                <div class="stat-icon blue">🏭</div>
+                                <div class="stat-label">System Status</div>
+                                <div class="stat-value" id="system-status">Loading...</div>
+                            </div>
+                            <div class="stat-card-detail">
+                                <div class="stat-label">System Health</div>
+                                <div style="font-size: 16px; margin-bottom: 8px;">
+                                    <strong>Backend:</strong> <span id="detail-backend">Loading...</span>
+                                </div>
+                                <div style="font-size: 16px; margin-bottom: 8px;">
+                                    <strong>Database:</strong> <span id="detail-database">Connected</span>
+                                </div>
+                                <div style="font-size: 16px;">
+                                    <strong>Last Check:</strong> <span id="detail-time">Just now</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-card-preview">
+                                <div class="stat-icon green">💡</div>
+                                <div class="stat-label">Total Insights</div>
+                                <div class="stat-value" id="total-insights">0</div>
+                                <div class="stat-change positive" id="insights-change">↑ New insights available</div>
+                            </div>
+                            <div class="stat-card-detail">
+                                <div class="stat-label">Insight Breakdown</div>
+                                <div style="font-size: 14px; margin-bottom: 6px;">
+                                    🔴 Critical: <strong id="detail-critical">0</strong>
+                                </div>
+                                <div style="font-size: 14px; margin-bottom: 6px;">
+                                    🟠 High: <strong id="detail-high">0</strong>
+                                </div>
+                                <div style="font-size: 14px; margin-bottom: 6px;">
+                                    🟡 Medium: <strong id="detail-medium">0</strong>
+                                </div>
+                                <div style="font-size: 14px;">
+                                    🔵 Low: <strong id="detail-low">0</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-card-preview">
+                                <div class="stat-icon purple">🎯</div>
+                                <div class="stat-label">Total Triggers</div>
+                                <div class="stat-value" id="total-triggers">0</div>
+                            </div>
+                            <div class="stat-card-detail">
+                                <div class="stat-label">Trigger Activity</div>
+                                <div style="font-size: 14px; margin-bottom: 6px;">
+                                    Last 24h: <strong id="detail-triggers-24h">0</strong>
+                                </div>
+                                <div style="font-size: 14px; margin-bottom: 6px;">
+                                    Last Week: <strong id="detail-triggers-week">0</strong>
+                                </div>
+                                <div style="font-size: 14px;">
+                                    All Time: <strong id="detail-triggers-all">0</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">🔥 Recent Critical Insights</h2>
+                            <button class="btn btn-secondary btn-sm" onclick="switchView('mode2')">View All</button>
+                        </div>
+                        <div class="insights-container" id="recent-insights">
+                            <div class="loading">
+                                <div class="spinner"></div>
+                                <p>Loading insights...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODE 2 VIEW -->
+            <div id="mode2-view" class="view">
+                <div class="header">
+                    <div>
+                        <h1 class="header-title">Autonomous Intelligence</h1>
+                        <p class="header-subtitle">Real-time monitoring and insight generation</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" onclick="manualInsightCheck()" title="Manually check database for new insights">
+                            ↻ Insights Read
+                        </button>
+                        <button class="btn btn-success" onclick="startMode2()">▶ Start Engine</button>
+                        <button class="btn btn-danger" onclick="stopMode2()">■ Stop</button>
+                    </div>
+                </div>
+
+                <div class="content">
+                    <div class="grid grid-cols-3">
+                        <div class="stat-card">
+                            <div class="stat-label">Engine Status</div>
+                            <div id="mode2-status-container">
+                                <span class="status-indicator stopped">
+                                    <span class="status-dot"></span>
+                                    Stopped
+                                </span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Insights Generated</div>
+                            <div class="stat-value" id="mode2-insights-count">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Triggers Detected</div>
+                            <div class="stat-value" id="mode2-triggers-count">0</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">All Insights</h2>
+                            <select id="severity-filter" onchange="filterInsights()" class="btn btn-secondary">
+                                <option value="">All Severities</option>
+                                <option value="critical">Critical</option>
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                        </div>
+                        <div class="insights-container" id="all-insights"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODE 3 VIEW -->
+            <div id="mode3-view" class="view">
+                <div class="header">
+                    <div>
+                        <h1 class="header-title">💼 Collaborative Planning</h1>
+                        <p class="header-subtitle">Interactive portfolio optimization with AIPI</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" onclick="showNewSessionModal()">🚀 New Session</button>
+                        <button class="btn btn-secondary" onclick="loadSessions()">📋 Load Session</button>
+                    </div>
+                </div>
+
+                <div class="content">
+                    <div id="mode3-start-screen">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">💼</div>
+                            <div class="empty-state-title">Start a Planning Session</div>
+                            <div class="empty-state-text">Create a new session or load an existing one to begin collaborative planning with AIPI</div>
+                            <button class="btn btn-primary" style="margin-top: 20px;" onclick="showNewSessionModal()">🚀 Start New Session</button>
+                        </div>
+                    </div>
+
+                    <div id="mode3-session-screen" style="display: none;">
+                        <div class="chat-container">
+                            <div class="portfolio-panel">
+                                <h3 style="margin-bottom: 20px; font-weight: 700;">📊 Portfolio Summary</h3>
+                                
+                                <div class="portfolio-stat">
+                                    <div class="portfolio-stat-label">Budget Allocated</div>
+                                    <div class="portfolio-stat-value" id="portfolio-budget">$0</div>
+                                    <div class="portfolio-stat-sub" id="portfolio-budget-sub">0% utilized</div>
+                                </div>
+
+                                <div class="portfolio-stat">
+                                    <div class="portfolio-stat-label">Projects Selected</div>
+                                    <div class="portfolio-stat-value" id="portfolio-projects">0</div>
+                                    <div class="portfolio-stat-sub" id="portfolio-deferred">0 deferred</div>
+                                </div>
+
+                                <div class="portfolio-stat">
+                                    <div class="portfolio-stat-label">Total NPV</div>
+                                    <div class="portfolio-stat-value" id="portfolio-npv">$0</div>
+                                    <div class="portfolio-stat-sub" id="portfolio-irr">Avg IRR: 0%</div>
+                                </div>
+
+                                <button class="btn btn-secondary" style="width: 100%; margin-top: 20px;" onclick="showProjectsModal()">📋 View All Projects</button>
+                                <button class="btn btn-secondary" style="width: 100%; margin-top: 8px;" onclick="exportPortfolio()">⬇️ Export Portfolio</button>
+                            </div>
+
+                            <div class="chat-panel">
+                                <div class="chat-header">
+                                    <div class="chat-header-title">💬 Chat with AIPI</div>
+                                    <div class="chat-header-subtitle">Ask questions and optimize your portfolio</div>
+                                </div>
+
+                                <div class="messages" id="chat-messages"></div>
+
+                                <div class="chat-input">
+                                    <div class="input-wrapper">
+                                        <textarea 
+                                            id="chat-input" 
+                                            class="chat-textarea" 
+                                            placeholder="Ask AIPI anything... (e.g., 'What if we increase budget to $20M?')"
+                                            rows="2"
+                                            onkeydown="handleChatKeydown(event)"
+                                        ></textarea>
+                                        <button class="btn btn-primary" onclick="sendMessage()">Send ➤</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HISTORY VIEW -->
+            <div id="history-view" class="view">
+                <div class="header">
+                    <div>
+                        <h1 class="header-title">Session History</h1>
+                        <p class="header-subtitle">View past planning sessions</p>
+                    </div>
+                </div>
+
+                <div class="content">
+                    <div class="card">
+                        <div id="sessions-list"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ============================================
+         NEW SESSION MODAL
+         ============================================ -->
+    <div id="new-session-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">🚀 Start New Planning Session</h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Your Name</label>
+                    <input type="text" id="session-user-id" class="form-input" placeholder="e.g., Dalton" value="Dalton">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Budget (USD)</label>
+                    <input type="number" id="session-budget" class="form-input" placeholder="15000000" value="15000000">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Minimum NPV (Optional)</label>
+                    <input type="number" id="session-min-npv" class="form-input" placeholder="0">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeNewSessionModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="startNewSession()">🚀 Start Session</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         VIEW ALL PROJECTS MODAL
+         ============================================ -->
+    <div id="projects-modal" class="projects-modal">
+        <div class="projects-modal-content">
+            <div class="projects-modal-header">
+                <h3 class="projects-modal-title">📋 All Selected Projects</h3>
+                <button class="close-modal-btn" onclick="closeProjectsModal()">×</button>
+            </div>
+            <div class="projects-modal-body">
+                <div id="projects-list">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading projects...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         JAVASCRIPT
+         ============================================ -->
+    <script>
+        const API_BASE = 'http://localhost:4333';
+        let currentSessionId = null;
+
+        // ========================================
+        // SIDEBAR TOGGLE
+        // ========================================
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const icon = document.getElementById('sidebar-toggle-icon');
+            
+            sidebar.classList.toggle('collapsed');
+            icon.textContent = sidebar.classList.contains('collapsed') ? '▶' : '◀';
+        }
+
+        // ========================================
+        // VIEW SWITCHING
+        // ========================================
+        function switchView(viewName) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(`${viewName}-view`).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            if (viewName === 'dashboard') {
+                loadDashboard();
+            } else if (viewName === 'mode2') {
+                loadMode2Data();
+            } else if (viewName === 'history') {
+                loadSessions();
+            }
+        }
+
+        // ========================================
+        // DASHBOARD
+        // ========================================
+        async function loadDashboard() {
+            try {
+                const healthRes = await fetch(`${API_BASE}/api/health`);
+                const health = await healthRes.json();
+                document.getElementById('system-status').textContent = health.status === 'healthy' ? '✓ Healthy' : '✗ Unhealthy';
+                document.getElementById('detail-backend').textContent = health.status === 'healthy' ? 'Operational' : 'Down';
+                document.getElementById('detail-time').textContent = new Date().toLocaleTimeString();
+
+                const mode2Res = await fetch(`${API_BASE}/api/mode2/status`);
+                const mode2 = await mode2Res.json();
+                document.getElementById('total-insights').textContent = mode2.total_insights || 0;
+                document.getElementById('total-triggers').textContent = mode2.total_triggers || 0;
+                document.getElementById('detail-triggers-all').textContent = mode2.total_triggers || 0;
+
+                const insightsRes = await fetch(`${API_BASE}/api/mode2/insights?limit=10`);
+                const insights = await insightsRes.json();
+                displayRecentInsights(insights.insights || []);
+                updateInsightBreakdown(insights.insights || []);
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                document.getElementById('system-status').textContent = '✗ Error';
+            }
+        }
+
+        function updateInsightBreakdown(insights) {
+            const breakdown = { critical: 0, high: 0, medium: 0, low: 0 };
+            
+            insights.forEach(insight => {
+                const urgency = (insight.urgency || 'medium').toLowerCase();
+                if (breakdown.hasOwnProperty(urgency)) {
+                    breakdown[urgency]++;
+                }
+            });
+            
+            document.getElementById('detail-critical').textContent = breakdown.critical;
+            document.getElementById('detail-high').textContent = breakdown.high;
+            document.getElementById('detail-medium').textContent = breakdown.medium;
+            document.getElementById('detail-low').textContent = breakdown.low;
+        }
+
+        function displayRecentInsights(insights) {
+            const container = document.getElementById('recent-insights');
+            
+            if (insights.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">💡</div>
+                        <div class="empty-state-title">No Insights Yet</div>
+                        <div class="empty-state-text">Click "Insights Read" to check for new insights from the database</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = insights.map(insight => `
+                <div class="insight-card ${insight.urgency || 'medium'}">
+                    <div class="insight-header">
+                        <div class="insight-title">${insight.title || 'Untitled Insight'}</div>
+                        <span class="insight-badge ${insight.urgency || 'medium'}">${(insight.urgency || 'medium').toUpperCase()}</span>
+                    </div>
+                    <div class="insight-content">
+                        <p><strong>Observation:</strong> ${insight.observation || 'N/A'}</p>
+                        <p><strong>Impact:</strong> ${insight.impact || 'N/A'}</p>
+                        <p><strong>Recommendation:</strong> ${insight.recommendation || 'N/A'}</p>
+                    </div>
+                    <div class="insight-meta">
+                        <div class="insight-meta-item">
+                            <div class="insight-meta-label">Category</div>
+                            <div class="insight-meta-value">${insight.category || 'N/A'}</div>
+                        </div>
+                        <div class="insight-meta-item">
+                            <div class="insight-meta-label">Confidence</div>
+                            <div class="insight-meta-value">${insight.confidence || 'N/A'}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function refreshDashboard() {
+            loadDashboard();
+        }
+
+        async function refreshInsights() {
+            try {
+                const insightsRes = await fetch(`${API_BASE}/api/mode2/insights?limit=10`);
+                const insights = await insightsRes.json();
+                displayRecentInsights(insights.insights || []);
+                
+                alert(`Refreshed! Found ${insights.insights ? insights.insights.length : 0} insights.`);
+            } catch (error) {
+                alert('Error refreshing insights: ' + error.message);
+            }
+        }
+
+        // ========================================
+        // MODE 2
+        // ========================================
+        async function loadMode2Data() {
+            try {
+                const statusRes = await fetch(`${API_BASE}/api/mode2/status`);
+                const status = await statusRes.json();
+                
+                updateMode2Status(status.running);
+                document.getElementById('mode2-insights-count').textContent = status.total_insights || 0;
+                document.getElementById('mode2-triggers-count').textContent = status.total_triggers || 0;
+
+                const insightsRes = await fetch(`${API_BASE}/api/mode2/insights?limit=50`);
+                const insights = await insightsRes.json();
+                displayAllInsights(insights.insights || []);
+            } catch (error) {
+                console.error('Error loading Mode 2:', error);
+            }
+        }
+
+        function updateMode2Status(isRunning) {
+            const container = document.getElementById('mode2-status-container');
+            const statusClass = isRunning ? 'running' : 'stopped';
+            const statusText = isRunning ? 'Running' : 'Stopped';
+            
+            container.innerHTML = `
+                <span class="status-indicator ${statusClass}">
+                    <span class="status-dot"></span>
+                    ${statusText}
+                </span>
+            `;
+        }
+
+        function displayAllInsights(insights) {
+            const container = document.getElementById('all-insights');
+            
+            if (insights.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">💡</div>
+                        <div class="empty-state-title">No Insights Generated</div>
+                        <div class="empty-state-text">Start the Autonomous Intelligence engine or click "Insights Read" to check for insights</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = insights.map(insight => `
+                <div class="insight-card ${insight.urgency || 'medium'}">
+                    <div class="insight-header">
+                        <div class="insight-title">${insight.title || 'Untitled Insight'}</div>
+                        <span class="insight-badge ${insight.urgency || 'medium'}">${(insight.urgency || 'medium').toUpperCase()}</span>
+                    </div>
+                    <div class="insight-content">
+                        <p><strong>Observation:</strong> ${insight.observation || 'N/A'}</p>
+                        <p><strong>Impact:</strong> ${insight.impact || 'N/A'}</p>
+                        <p><strong>Recommendation:</strong> ${insight.recommendation || 'N/A'}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function startMode2() {
+            try {
+                await fetch(`${API_BASE}/api/mode2/start`, { method: 'POST' });
+                alert('Autonomous Intelligence engine started successfully!');
+                updateMode2Status(true);
+                loadMode2Data();
+            } catch (error) {
+                alert('Error starting engine: ' + error.message);
+            }
+        }
+
+        async function stopMode2() {
+            try {
+                await fetch(`${API_BASE}/api/mode2/stop`, { method: 'POST' });
+                alert('Autonomous Intelligence engine stopped!');
+                updateMode2Status(false);
+                loadMode2Data();
+            } catch (error) {
+                alert('Error stopping engine: ' + error.message);
+            }
+        }
+
+        async function manualInsightCheck() {
+            try {
+                const insightsRes = await fetch(`${API_BASE}/api/mode2/insights?limit=50`);
+                const insights = await insightsRes.json();
+                displayAllInsights(insights.insights || []);
+                
+                alert(`Checked database! Found ${insights.total || (insights.insights ? insights.insights.length : 0)} insights.`);
+            } catch (error) {
+                alert('Error checking insights: ' + error.message);
+            }
+        }
+
+        function filterInsights() {
+            const severity = document.getElementById('severity-filter').value;
+            loadMode2Data();
+        }
+
+        // ========================================
+        // MODE 3 - COLLABORATIVE PLANNING
+        // ========================================
+        function showNewSessionModal() {
+            document.getElementById('new-session-modal').classList.add('active');
+        }
+
+        function closeNewSessionModal() {
+            document.getElementById('new-session-modal').classList.remove('active');
+        }
+
+        async function startNewSession() {
+            const userId = document.getElementById('session-user-id').value;
+            const budget = parseFloat(document.getElementById('session-budget').value);
+            const minNpv = parseFloat(document.getElementById('session-min-npv').value) || 0;
+
+            if (!userId || !budget) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            closeNewSessionModal();
+
+            const startScreen = document.getElementById('mode3-start-screen');
+            startScreen.innerHTML = `
+                <div class="session-loading active">
+                    <div class="session-loading-spinner">💼</div>
+                    <div class="loading-text">Creating planning session...</div>
+                    <div class="loading-subtext" id="loading-status">Analyzing $${budget.toLocaleString()} budget</div>
+                </div>
+            `;
+
+            try {
+                setTimeout(() => {
+                    const spinner = document.querySelector('.session-loading-spinner');
+                    const status = document.getElementById('loading-status');
+                    if (spinner) spinner.textContent = '🔍';
+                    if (status) status.textContent = 'Fetching candidate projects...';
+                }, 500);
+
+                setTimeout(() => {
+                    const spinner = document.querySelector('.session-loading-spinner');
+                    const status = document.getElementById('loading-status');
+                    if (spinner) spinner.textContent = '⚙️';
+                    if (status) status.textContent = 'Running optimization algorithm...';
+                }, 1500);
+
+                setTimeout(() => {
+                    const spinner = document.querySelector('.session-loading-spinner');
+                    const status = document.getElementById('loading-status');
+                    if (spinner) spinner.textContent = '📊';
+                    if (status) status.textContent = 'Building portfolio...';
+                }, 2500);
+
+                const response = await fetch(`${API_BASE}/api/mode3/session/start`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        budget: budget,
+                        filters: { min_npv: minNpv }
+                    })
+                });
+
+                const data = await response.json();
+                currentSessionId = data.session_id;
+
+                setTimeout(() => {
+                    const spinner = document.querySelector('.session-loading-spinner');
+                    const status = document.getElementById('loading-status');
+                    if (spinner) spinner.textContent = '✅';
+                    if (status) status.textContent = 'Session ready!';
+                }, 3000);
+
+                updatePortfolioDisplay(data.portfolio);
+                addMessage('assistant', data.message);
+
+                setTimeout(() => {
+                    document.getElementById('mode3-start-screen').style.display = 'none';
+                    document.getElementById('mode3-session-screen').style.display = 'block';
+                }, 3500);
+
+            } catch (error) {
+                startScreen.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">❌</div>
+                        <div class="empty-state-title">Session Creation Failed</div>
+                        <div class="empty-state-text">${error.message}</div>
+                        <button class="btn btn-primary" style="margin-top: 20px;" onclick="showNewSessionModal()">🔄 Try Again</button>
+                    </div>
+                `;
+            }
+        }
+
+        function updatePortfolioDisplay(portfolio) {
+            if (!portfolio) return;
+
+            document.getElementById('portfolio-budget').textContent = `$${(portfolio.total_cost || 0).toLocaleString()}`;
+            document.getElementById('portfolio-budget-sub').textContent = 
+                `${(portfolio.budget_utilization_pct || 0).toFixed(1)}% utilized • $${(portfolio.budget_remaining || 0).toLocaleString()} remaining`;
+            
+            document.getElementById('portfolio-projects').textContent = portfolio.project_count || 0;
+            document.getElementById('portfolio-deferred').textContent = 
+                `${(portfolio.deferred_projects || []).length} deferred`;
+            
+            document.getElementById('portfolio-npv').textContent = `$${(portfolio.total_npv || 0).toLocaleString()}`;
+            document.getElementById('portfolio-irr').textContent = `Avg IRR: ${(portfolio.avg_irr || 0).toFixed(1)}%`;
+        }
+
+        // ========================================
+        // MESSAGE FORMATTING WITH ANSI STRIPPING
+        // ========================================
+        
+        function stripAnsiCodes(text) {
+            if (!text) return '';
+            // Remove ANSI escape sequences: \x1b[XXm or [XXm
+            return text.replace(/\x1b\[[0-9;]*m/g, '').replace(/\[[0-9;]*m/g, '');
+        }
+
+        function addMessage(role, content, portfolioUpdate = null) {
+            const messagesContainer = document.getElementById('chat-messages');
+            const time = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+            
+            const avatar = role === 'assistant' ? '🤖' : 'D';
+            const sender = role === 'assistant' ? 'AIPI' : 'You';
+            
+            const formattedContent = role === 'assistant' ? formatAIPIMessage(content) : escapeHtml(content);
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${avatar}</div>
+                <div class="message-content">
+                    <div class="message-meta">${sender} • ${time}</div>
+                    <div class="message-bubble">${formattedContent}</div>
+                    ${portfolioUpdate ? `
+                        <div class="portfolio-update">
+                            <div class="portfolio-update-title">✅ Portfolio Updated</div>
+                            <div class="portfolio-metrics">
+                                <div class="metric">
+                                    <div class="metric-label">Projects</div>
+                                    <div class="metric-value">${portfolioUpdate.project_count}</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-label">Total Cost</div>
+                                    <div class="metric-value">$${(portfolioUpdate.total_cost || 0).toLocaleString()}</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-label">NPV</div>
+                                    <div class="metric-value">$${(portfolioUpdate.total_npv || 0).toLocaleString()}</div>
+                                </div>
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function formatAIPIMessage(content) {
+            if (!content) return '';
+            
+            // FIRST: Strip ANSI color codes
+            content = stripAnsiCodes(content);
+            
+            // Check for tables
+            if (content.includes('|')) {
+                content = formatTable(content);
+            }
+            
+            let formatted = escapeHtml(content);
+            
+            // Format bold text
+            formatted = formatted.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            
+            // Format section headers
+            formatted = formatted.replace(/^([A-Z][^:\n]+:)\s*$/gm, '<div class="msg-section-header">$1</div>');
+            
+            // Format numbered lists
+            formatted = formatted.replace(/^(\d+)\.\s+(.+)$/gm, '<div class="msg-list-item"><span class="msg-list-number">$1.</span> $2</div>');
+            
+            // Format bullet points
+            formatted = formatted.replace(/^[-•]\s+(.+)$/gm, '<div class="msg-bullet-item">• $1</div>');
+            
+            // Format project mentions
+            formatted = formatted.replace(/"([^"]+)"\s+\(\$([^)]+)\)/g, '<span class="msg-project"><strong>"$1"</strong> <span class="msg-cost">($$$2)</span></span>');
+            
+            // Format currency
+            formatted = formatted.replace(/\$(\d+(?:,\d{3})*(?:\.\d+)?[MKB]?)/g, '<span class="msg-currency">$$$1</span>');
+            
+            // Format percentages
+            formatted = formatted.replace(/(\d+(?:\.\d+)?%)/g, '<span class="msg-percentage">$1</span>');
+            
+            // Format paragraphs
+            formatted = formatted.replace(/\n\n+/g, '</p><p>');
+            formatted = formatted.replace(/\n/g, '<br>');
+            formatted = '<p>' + formatted + '</p>';
+            
+            return formatted;
+        }
+
+        function formatTable(content) {
+            const lines = content.split('\n');
+            let inTable = false;
+            let tableRows = [];
+            let result = [];
+            
+            lines.forEach(line => {
+                if (line.includes('|') && line.split('|').length > 2) {
+                    if (!inTable) {
+                        inTable = true;
+                        tableRows = [];
+                    }
+                    tableRows.push(line);
+                } else {
+                    if (inTable && tableRows.length > 0) {
+                        result.push(renderTable(tableRows));
+                        tableRows = [];
+                        inTable = false;
+                    }
+                    result.push(line);
+                }
+            });
+            
+            if (inTable && tableRows.length > 0) {
+                result.push(renderTable(tableRows));
+            }
+            
+            return result.join('\n');
+        }
+
+        function renderTable(rows) {
+            if (rows.length < 2) return rows.join('\n');
+            
+            const cells = rows.map(row => 
+                row.split('|').map(cell => cell.trim()).filter(cell => cell.length > 0)
+            );
+            
+            if (cells.length === 0 || cells[0].length === 0) {
+                return rows.join('\n');
+            }
+            
+            let html = '<table class="msg-table">';
+            
+            html += '<thead><tr>';
+            cells[0].forEach(cell => {
+                html += `<th>${cell}</th>`;
+            });
+            html += '</tr></thead>';
+            
+            html += '<tbody>';
+            for (let i = 1; i < cells.length; i++) {
+                if (cells[i].every(cell => /^-+$/.test(cell))) continue;
+                
+                html += '<tr>';
+                cells[i].forEach(cell => {
+                    html += `<td>${cell}</td>`;
+                });
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+            
+            return html;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            
+            if (!message || !currentSessionId) return;
+
+            addMessage('user', message);
+            input.value = '';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/mode3/session/message`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: currentSessionId,
+                        message: message
+                    })
+                });
+
+                const data = await response.json();
+                addMessage('assistant', data.message, data.updated_portfolio);
+
+                if (data.updated_portfolio) {
+                    updatePortfolioDisplay(data.updated_portfolio);
+                }
+            } catch (error) {
+                addMessage('assistant', 'Sorry, I encountered an error processing your request. Please try again.');
+            }
+        }
+
+        function handleChatKeydown(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        async function exportPortfolio() {
+            if (!currentSessionId) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/mode3/session/export`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: currentSessionId,
+                        format: 'json'
+                    })
+                });
+
+                const data = await response.json();
+                alert(`Portfolio exported to: ${data.filepath}`);
+            } catch (error) {
+                alert('Error exporting portfolio: ' + error.message);
+            }
+        }
+
+        // ========================================
+        // VIEW ALL PROJECTS
+        // ========================================
+        function showProjectsModal() {
+            if (!currentSessionId) {
+                alert('No active session. Please start a planning session first.');
+                return;
+            }
+            
+            document.getElementById('projects-modal').classList.add('active');
+            loadAllProjects();
+        }
+
+        function closeProjectsModal() {
+            document.getElementById('projects-modal').classList.remove('active');
+        }
+
+        async function loadAllProjects() {
+            const container = document.getElementById('projects-list');
+            
+            if (!currentSessionId) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <div class="empty-state-title">No Active Session</div>
+                        <div class="empty-state-text">Start a planning session to view projects</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/mode3/session/${currentSessionId}`);
+                const data = await response.json();
+                
+                if (!data.portfolio || !data.portfolio.projects || data.portfolio.projects.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📋</div>
+                            <div class="empty-state-title">No Projects</div>
+                            <div class="empty-state-text">No projects in this portfolio</div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                displayProjects(data.portfolio.projects);
+                
+            } catch (error) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">❌</div>
+                        <div class="empty-state-title">Error Loading Projects</div>
+                        <div class="empty-state-text">${error.message}</div>
+                    </div>
+                `;
+            }
+        }
+
+        function displayProjects(projects) {
+            const container = document.getElementById('projects-list');
+            
+            container.innerHTML = `
+                <div style="margin-bottom: 16px; color: var(--gray-600); font-size: 14px;">
+                    Showing ${projects.length} project${projects.length !== 1 ? 's' : ''}
+                </div>
+                ${projects.map(project => `
+                    <div class="project-card">
+                        <div class="project-card-header">
+                            <div class="project-name">${project.name || project.project_name || 'Untitled Project'}</div>
+                            <span class="project-priority ${(project.priority || 'medium').toLowerCase()}">
+                                ${(project.priority || 'Medium').toUpperCase()}
+                            </span>
+                        </div>
+                        
+                        ${project.description ? `
+                            <div class="project-description">${project.description}</div>
+                        ` : ''}
+                        
+                        <div class="project-metrics">
+                            <div class="project-metric">
+                                <div class="project-metric-label">Cost</div>
+                                <div class="project-metric-value">$${(project.cost || 0).toLocaleString()}</div>
+                            </div>
+                            <div class="project-metric">
+                                <div class="project-metric-label">NPV</div>
+                                <div class="project-metric-value">$${(project.npv || 0).toLocaleString()}</div>
+                            </div>
+                            <div class="project-metric">
+                                <div class="project-metric-label">IRR</div>
+                                <div class="project-metric-value">${(project.irr || 0).toFixed(1)}%</div>
+                            </div>
+                            <div class="project-metric">
+                                <div class="project-metric-label">Risk</div>
+                                <div class="project-metric-value">${project.risk || 'Medium'}</div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        // ========================================
+        // HISTORY
+        // ========================================
+        async function loadSessions() {
+            try {
+                const response = await fetch(`${API_BASE}/api/mode3/sessions`);
+                const data = await response.json();
+                displaySessions(data.sessions || []);
+            } catch (error) {
+                console.error('Error loading sessions:', error);
+            }
+        }
+
+        function displaySessions(sessions) {
+            const container = document.getElementById('sessions-list');
+            
+            if (sessions.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <div class="empty-state-title">No Sessions Yet</div>
+                        <div class="empty-state-text">Start a Collaborative Planning session to see it here</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Session ID</th>
+                            <th>User</th>
+                            <th>Budget</th>
+                            <th>Created</th>
+                            <th>Iterations</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${sessions.map(session => `
+                            <tr>
+                                <td>${session.session_id}</td>
+                                <td>${session.user_id}</td>
+                                <td>$${(session.budget || 0).toLocaleString()}</td>
+                                <td>${new Date(session.created_at).toLocaleDateString()}</td>
+                                <td>${session.iterations || 0}</td>
+                                <td><span class="badge ${session.status}">${session.status || 'active'}</span></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', (e) => {
+            const projectsModal = document.getElementById('projects-modal');
+            const newSessionModal = document.getElementById('new-session-modal');
+            
+            if (e.target === projectsModal) {
+                closeProjectsModal();
+            }
+            
+            if (e.target === newSessionModal) {
+                closeNewSessionModal();
+            }
+        });
+
+        // ========================================
+        // INITIALIZE
+        // ========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            loadDashboard();
+        });
+    </script>
+</body>
+</html>

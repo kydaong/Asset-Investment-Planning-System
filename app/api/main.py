@@ -2,14 +2,21 @@
 FastAPI Backend for Mode 2 and Mode 3
 Provides REST API and WebSocket endpoints
 """
-from fastapi import FastAPI, WebSocket, HTTPException
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
+from dotenv import load_dotenv
+load_dotenv()
+
+from fastapi import FastAPI, WebSocket, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
 import asyncio
 import json
-import os
+import uuid
 
 from app.core.mode2_engine import Mode2Engine
 from app.planning.engine import Mode3Engine
@@ -32,10 +39,32 @@ mode3_engine = Mode3Engine()
 # Store active WebSocket connections
 active_connections: List[WebSocket] = []
 
+# ============================================================================
+# Auth — users loaded from .env AIPI_USERS=admin:pass1,viewer:pass2
+# ============================================================================
+
+def _load_users() -> Dict[str, str]:
+    users = {}
+    raw = os.getenv("AIPI_USERS", "")
+    for entry in raw.split(","):
+        entry = entry.strip()
+        if ":" in entry:
+            username, password = entry.split(":", 1)
+            users[username.strip()] = password.strip()
+    return users
+
+# In-memory session store: token -> username
+_sessions: Dict[str, str] = {}
+
 
 # ============================================================================
 # Pydantic Models
 # ============================================================================
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
 
 class Mode3SessionRequest(BaseModel):
     user_id: str
@@ -51,6 +80,35 @@ class Mode3MessageRequest(BaseModel):
 class ExportRequest(BaseModel):
     session_id: str
     format: str = "json"
+
+
+# ============================================================================
+# Auth Endpoints
+# ============================================================================
+
+@app.post("/api/auth/login")
+async def login(request: LoginRequest):
+    users = _load_users()
+    if request.username not in users or users[request.username] != request.password:
+        raise HTTPException(status_code=401, detail="Invalid username or password")
+    token = str(uuid.uuid4())
+    _sessions[token] = request.username
+    return {"token": token, "username": request.username}
+
+
+@app.post("/api/auth/logout")
+async def logout(authorization: Optional[str] = Header(None)):
+    token = authorization.replace("Bearer ", "") if authorization else ""
+    _sessions.pop(token, None)
+    return {"message": "Logged out"}
+
+
+@app.get("/api/auth/verify")
+async def verify(authorization: Optional[str] = Header(None)):
+    token = authorization.replace("Bearer ", "") if authorization else ""
+    if token not in _sessions:
+        raise HTTPException(status_code=401, detail="Invalid or expired session")
+    return {"username": _sessions[token]}
 
 
 # ============================================================================
@@ -127,9 +185,9 @@ async def get_insights(limit: int = 50, severity: Optional[str] = None):
         # Filter by severity if provided
         if severity:
             insights = [i for i in insights if i.get("urgency") == severity]
-        
-        # Return most recent first
-        insights.reverse()
+
+        # Sort by generated_at descending (latest first)
+        insights.sort(key=lambda x: x.get("generated_at", ""), reverse=True)
         
         return {
             "insights": insights[:limit],

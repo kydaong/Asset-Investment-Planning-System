@@ -106220,6 +106220,321 @@
         "INS-2026-004",
         "INS-2026-005"
       ]
+    },
+    {
+      "timestamp": "2026-03-12T06:43:50.597798",
+      "plan": {
+        "focus_area": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures",
+        "rationale": "Triggered by: budget_overrun (severity: critical)",
+        "trigger_type": "threshold",
+        "trigger_details": {
+          "trigger_type": "threshold",
+          "trigger_name": "budget_overrun",
+          "severity": "critical",
+          "mtd_cost": 554671.46,
+          "prorated_budget": 193548.3870967742,
+          "monthly_budget": 500000,
+          "overrun_amount": 361123.0729032258,
+          "overrun_pct": 186.5802543333333,
+          "transaction_count": 20,
+          "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures",
+          "priority": 1,
+          "triggered_at": "2026-03-12T06:39:09.029503"
+        },
+        "data_sources": [
+          "Assets",
+          "MaintenanceHistory",
+          "FailureEvents",
+          "OperatingCosts",
+          "ProductionMetrics",
+          "AssetPerformanceMetrics"
+        ],
+        "all_triggers": [
+          {
+            "trigger_type": "threshold",
+            "trigger_name": "budget_overrun",
+            "severity": "critical",
+            "mtd_cost": 554671.46,
+            "prorated_budget": 193548.3870967742,
+            "monthly_budget": 500000,
+            "overrun_amount": 361123.0729032258,
+            "overrun_pct": 186.5802543333333,
+            "transaction_count": 20,
+            "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures",
+            "priority": 1,
+            "triggered_at": "2026-03-12T06:39:09.029503"
+          },
+          {
+            "trigger_type": "threshold",
+            "trigger_name": "low_oee",
+            "severity": "medium",
+            "line_count": 4,
+            "lines": [
+              "Line-C",
+              "Line-A",
+              "Line-D",
+              "Line-B"
+            ],
+            "worst_oee": "65.450000",
+            "details": [
+              {
+                "ProductionLine": "Line-C",
+                "AvgOEE": "65.450000",
+                "DataPoints": 11
+              },
+              {
+                "ProductionLine": "Line-A",
+                "AvgOEE": "72.294444",
+                "DataPoints": 18
+              },
+              {
+                "ProductionLine": "Line-D",
+                "AvgOEE": "72.499285",
+                "DataPoints": 14
+              },
+              {
+                "ProductionLine": "Line-B",
+                "AvgOEE": "74.233571",
+                "DataPoints": 14
+              }
+            ],
+            "investigation_focus": "OEE improvement analysis - identify bottlenecks and recommend optimization",
+            "priority": 3,
+            "triggered_at": "2026-03-12T06:39:09.044537"
+          },
+          {
+            "trigger_type": "time_based",
+            "trigger_name": "scheduled_investigation",
+            "severity": "routine",
+            "interval_minutes": 30,
+            "investigation_focus": "Routine system health check",
+            "priority": 5,
+            "triggered_at": "2026-03-12T06:39:09.001660"
+          }
+        ]
+      },
+      "findings_summary": {
+        "data_points": 9,
+        "focus_area": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+      },
+      "insights_count": 5,
+      "insight_ids": [
+        "INS-2026-001",
+        "INS-2026-002",
+        "INS-2026-003",
+        "INS-2026-004",
+        "INS-2026-005"
+      ]
+    },
+    {
+      "timestamp": "2026-03-13T09:35:02.723755",
+      "plan": {
+        "focus_area": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures",
+        "rationale": "Triggered by: budget_overrun (severity: critical)",
+        "trigger_type": "threshold",
+        "trigger_details": {
+          "trigger_type": "threshold",
+          "trigger_name": "budget_overrun",
+          "severity": "critical",
+          "mtd_cost": 554671.46,
+          "prorated_budget": 209677.41935483873,
+          "monthly_budget": 500000,
+          "overrun_amount": 344994.04064516124,
+          "overrun_pct": 164.53561938461533,
+          "transaction_count": 20,
+          "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures",
+          "priority": 1,
+          "triggered_at": "2026-03-13T09:29:52.215829"
+        },
+        "data_sources": [
+          "Assets",
+          "MaintenanceHistory",
+          "FailureEvents",
+          "OperatingCosts",
+          "ProductionMetrics",
+          "AssetPerformanceMetrics"
+        ],
+        "all_triggers": [
+          {
+            "trigger_type": "threshold",
+            "trigger_name": "budget_overrun",
+            "severity": "critical",
+            "mtd_cost": 554671.46,
+            "prorated_budget": 209677.41935483873,
+            "monthly_budget": 500000,
+            "overrun_amount": 344994.04064516124,
+            "overrun_pct": 164.53561938461533,
+            "transaction_count": 20,
+            "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures",
+            "priority": 1,
+            "triggered_at": "2026-03-13T09:29:52.215829"
+          },
+          {
+            "trigger_type": "threshold",
+            "trigger_name": "low_oee",
+            "severity": "medium",
+            "line_count": 4,
+            "lines": [
+              "Line-C",
+              "Line-A",
+              "Line-D",
+              "Line-B"
+            ],
+            "worst_oee": "65.450000",
+            "details": [
+              {
+                "ProductionLine": "Line-C",
+                "AvgOEE": "65.450000",
+                "DataPoints": 11
+              },
+              {
+                "ProductionLine": "Line-A",
+                "AvgOEE": "71.874375",
+                "DataPoints": 16
+              },
+              {
+                "ProductionLine": "Line-D",
+                "AvgOEE": "72.233333",
+                "DataPoints": 12
+              },
+              {
+                "ProductionLine": "Line-B",
+                "AvgOEE": "74.233571",
+                "DataPoints": 14
+              }
+            ],
+            "investigation_focus": "OEE improvement analysis - identify bottlenecks and recommend optimization",
+            "priority": 3,
+            "triggered_at": "2026-03-13T09:29:52.236675"
+          },
+          {
+            "trigger_type": "time_based",
+            "trigger_name": "scheduled_investigation",
+            "severity": "routine",
+            "interval_minutes": 30,
+            "investigation_focus": "Routine system health check",
+            "priority": 5,
+            "triggered_at": "2026-03-13T09:29:52.199343"
+          }
+        ]
+      },
+      "findings_summary": {
+        "data_points": 16,
+        "focus_area": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+      },
+      "insights_count": 5,
+      "insight_ids": [
+        "INS-2026-001",
+        "INS-2026-002",
+        "INS-2026-003",
+        "INS-2026-004",
+        "INS-2026-005"
+      ]
+    },
+    {
+      "timestamp": "2026-03-16T09:10:08.956808",
+      "plan": {
+        "focus_area": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures",
+        "rationale": "Triggered by: budget_overrun (severity: critical)",
+        "trigger_type": "threshold",
+        "trigger_details": {
+          "trigger_type": "threshold",
+          "trigger_name": "budget_overrun",
+          "severity": "critical",
+          "mtd_cost": 554671.46,
+          "prorated_budget": 258064.51612903227,
+          "monthly_budget": 500000,
+          "overrun_amount": 296606.9438709677,
+          "overrun_pct": 114.93519074999998,
+          "transaction_count": 20,
+          "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures",
+          "priority": 1,
+          "triggered_at": "2026-03-16T09:04:27.664313"
+        },
+        "data_sources": [
+          "Assets",
+          "MaintenanceHistory",
+          "FailureEvents",
+          "OperatingCosts",
+          "ProductionMetrics",
+          "AssetPerformanceMetrics"
+        ],
+        "all_triggers": [
+          {
+            "trigger_type": "threshold",
+            "trigger_name": "budget_overrun",
+            "severity": "critical",
+            "mtd_cost": 554671.46,
+            "prorated_budget": 258064.51612903227,
+            "monthly_budget": 500000,
+            "overrun_amount": 296606.9438709677,
+            "overrun_pct": 114.93519074999998,
+            "transaction_count": 20,
+            "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures",
+            "priority": 1,
+            "triggered_at": "2026-03-16T09:04:27.664313"
+          },
+          {
+            "trigger_type": "threshold",
+            "trigger_name": "low_oee",
+            "severity": "medium",
+            "line_count": 4,
+            "lines": [
+              "Line-C",
+              "Line-A",
+              "Line-B",
+              "Line-D"
+            ],
+            "worst_oee": "65.935555",
+            "details": [
+              {
+                "ProductionLine": "Line-C",
+                "AvgOEE": "65.935555",
+                "DataPoints": 9
+              },
+              {
+                "ProductionLine": "Line-A",
+                "AvgOEE": "71.596666",
+                "DataPoints": 15
+              },
+              {
+                "ProductionLine": "Line-B",
+                "AvgOEE": "71.597500",
+                "DataPoints": 12
+              },
+              {
+                "ProductionLine": "Line-D",
+                "AvgOEE": "72.233333",
+                "DataPoints": 12
+              }
+            ],
+            "investigation_focus": "OEE improvement analysis - identify bottlenecks and recommend optimization",
+            "priority": 3,
+            "triggered_at": "2026-03-16T09:04:27.671227"
+          },
+          {
+            "trigger_type": "time_based",
+            "trigger_name": "scheduled_investigation",
+            "severity": "routine",
+            "interval_minutes": 30,
+            "investigation_focus": "Routine system health check",
+            "priority": 5,
+            "triggered_at": "2026-03-16T09:04:27.657528"
+          }
+        ]
+      },
+      "findings_summary": {
+        "data_points": 10,
+        "focus_area": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+      },
+      "insights_count": 5,
+      "insight_ids": [
+        "INS-2026-001",
+        "INS-2026-002",
+        "INS-2026-003",
+        "INS-2026-004",
+        "INS-2026-005"
+      ]
     }
   ],
   "insights_generated": [
@@ -106610,6 +106925,231 @@
         "urgency": "medium",
         "confidence": "medium",
         "generated_at": "2026-03-11T17:56:11.135691",
+        "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+      }
+    },
+    {
+      "timestamp": "2026-03-12T06:43:50.597798",
+      "insight": {
+        "insight_id": "INS-2026-001",
+        "title": "Compressor 282 Operational Emergency: 68.5-Hour MTBF Driving Uncontrolled Repeat Failure Costs",
+        "category": "Risk",
+        "observation": "Compressor 282 (Maintenance dept, Medium criticality) has recorded 6 failures in 12 months with an average MTBF of only 68.5 hours \u2014 equivalent to a failure every 2.8 days. It has accumulated $176,960 in repair costs, $213,684 in production losses, and 139 hours of downtime, with 6 unplanned work orders costing an additional $39,706. The asset is in an active failure loop with no sign of stabilization.",
+        "impact": "At current failure velocity, annualized repair and production loss exposure exceeds $390,000 from this single asset. Each failure cycle also consumes emergency contractor and labor capacity that cascades into budget overruns for the broader Maintenance department, which recorded $416,731 in emergency maintenance spend \u2014 nearly equal to its corrective spend of $418,784.",
+        "recommendation": "Initiate an immediate engineering hold and failure mode root cause analysis within 7 days. Evaluate replacement versus major overhaul using a break-even threshold: if repair-to-replace cost ratio exceeds 40% of replacement value, approve capital replacement. Escalate criticality classification from Medium to High pending review. Do not return to service without documented corrective action signed off by engineering.",
+        "urgency": "critical",
+        "confidence": "high",
+        "generated_at": "2026-03-12T06:43:50.501127",
+        "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+      }
+    },
+    {
+      "timestamp": "2026-03-12T06:43:50.597798",
+      "insight": {
+        "insight_id": "INS-2026-002",
+        "title": "Reactive Maintenance Dominance Across All Departments Is Structurally Inflating the Cost Base",
+        "category": "Financial",
+        "observation": "Corrective and Emergency maintenance combined account for the two highest-cost work order categories in every department. In Production, Corrective ($455,826) and Emergency ($404,619) together total $860,445 versus $692,523 for Preventive and Predictive combined \u2014 a 24% reactive premium. In Maintenance, Emergency spend ($416,731) is within 0.01% of Corrective ($418,784), indicating the maintenance program is effectively running in permanent reactive mode. Contractor costs within emergency work orders are the highest of any category, ranging $131,000\u2013$147,000 per department.",
+        "impact": "The reactive-to-proactive cost ratio across all three departments suggests approximately $300,000\u2013$450,000 in annual avoidable costs attributable to emergency procurement premiums, unplanned contractor callouts, and repeat corrective cycles on assets with known failure histories. Production's 9.2% budget variance in November 2025 \u2014 the highest recorded \u2014 is a leading indicator that this trend is accelerating, not stabilizing.",
+        "recommendation": "Mandate a maintenance mix rebalancing program: target Corrective plus Emergency work orders to represent no more than 40% of total work order volume within 6 months, down from the current estimated 55\u201360%. Prioritize predictive maintenance investment for the top 15 budget-overrunning assets. Require root cause documentation for every emergency work order above $5,000 to break repeat failure cycles. Review contractor framework agreements to eliminate callout premiums for predictable failure patterns.",
+        "urgency": "high",
+        "confidence": "high",
+        "generated_at": "2026-03-12T06:43:50.501127",
+        "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+      }
+    },
+    {
+      "timestamp": "2026-03-12T06:43:50.597798",
+      "insight": {
+        "insight_id": "INS-2026-003",
+        "title": "Eight High-Failure Assets Represent $4.6M in Addressable Repair and Production Loss Exposure",
+        "category": "Financial",
+        "observation": "The top 8 assets by repair cost \u2014 Valve 267, Valve 108, Separator 420, Motor 88, Pump 286, Compressor 19, Heat Exchanger 173, and Compressor 282 \u2014 collectively generated $1.725M in repair costs and $2.899M in production losses over 12 months, totaling $4.624M in combined financial impact. Pump 286 alone produced $507,485 in production losses from only 2 failures. Separator 420 and Motor 88 each generated production losses exceeding $396,000 despite zero recorded unplanned maintenance work orders, suggesting these failures are going untracked in the maintenance system and are not being addressed through structured corrective actions.",
+        "impact": "If even 50% of the failure-driven costs on these 8 assets are eliminated through targeted capital reinvestment or reliability improvements, the annual saving would reach approximately $2.3M \u2014 more than doubling the estimated near-term addressable savings from all other cost reduction levers combined. The three assets with null unplanned maintenance costs (Separator 420, Motor 88, Pump 286) despite multiple failures represent a data integrity gap that is likely masking additional cost exposure.",
+        "recommendation": "Establish a dedicated reliability task force for these 8 assets within 30 days. For each asset, complete a failure mode and effects analysis and produce a go/no-go recommendation for capital replacement versus predictive maintenance intervention. Immediately investigate the data gap for Separator 420, Motor 88, and Pump 286 \u2014 their zero unplanned maintenance cost records despite significant failures indicates work orders are either not being raised or not being correctly categorized, understating true cost. Prioritize Pump 286 and Separator 420 for capital project scoping given their production loss severity.",
+        "urgency": "high",
+        "confidence": "high",
+        "generated_at": "2026-03-12T06:43:50.501127",
+        "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+      }
+    },
+    {
+      "timestamp": "2026-03-12T06:43:50.597798",
+      "insight": {
+        "insight_id": "INS-2026-004",
+        "title": "Production Department's $8.88M Capital Project Pipeline Is Under-Activated Against Its Highest Cost Exposure",
+        "category": "Opportunity",
+        "observation": "Production has 4 active capital projects with a combined projected benefit of $8.876M \u2014 the largest capital benefit pool in the organization. Yet Production recorded the highest budget variance ratio at 9.2% in November 2025, the highest corrective maintenance spend at $455,826, and is home to 5 of the top 15 budget-overrunning assets including Valve 108 ($206,780 repair cost), Pump 286 ($507,485 production loss), and Motor 88 ($396,167 production loss). The capital projects exist but have not yet arrested the cost escalation, suggesting either slow execution or misalignment between project scope and the actual failure drivers.",
+        "impact": "Every month of delayed capital project delivery in Production carries an estimated ongoing cost exposure of $72,000\u2013$85,000 in corrective and emergency maintenance spend alone, plus production loss risk from the high-failure assets. If the 4 projects were fully executed and delivered even 30% of their projected $8.876M benefit, the annual return would be approximately $2.66M against an unquantified but clearly substantial capital investment.",
+        "recommendation": "Conduct an immediate alignment review between the 4 active Production capital projects and the specific assets driving the highest failure and budget overrun costs. If the projects do not directly address Pump 286, Valve 108, Motor 88, or Separator 420, scope amendments should be evaluated. Assign a project delivery owner with a mandate to report monthly on milestone progress against cost reduction targets. Establish a quantified benefits realization tracking process so project ROI can be measured against actual maintenance cost reduction post-completion.",
+        "urgency": "high",
+        "confidence": "medium",
+        "generated_at": "2026-03-12T06:43:50.501127",
+        "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+      }
+    },
+    {
+      "timestamp": "2026-03-12T06:43:50.597798",
+      "insight": {
+        "insight_id": "INS-2026-005",
+        "title": "Valve 237 Criticality Misclassification Is Generating Premium Maintenance Costs on a Low-Priority Asset",
+        "category": "Performance",
+        "observation": "Valve 237 (Maintenance department, classified Low criticality, Status: Operating) is the single highest budget-overrunning asset in the portfolio with a $22,599 total variance at 15.3% over budget \u2014 exceeding even Critical-rated assets like Turbine 189 and Valve 66. It has been over budget in 3 of the last 12 months and has accumulated $50,375 in maintenance costs and $22,895 in contractor costs. A Low criticality classification typically results in deferred maintenance scheduling and lower intervention priority, yet this asset is consuming costs consistent with a High or Critical asset profile, suggesting either the classification is wrong or the maintenance strategy applied to it is misaligned.",
+        "impact": "Misclassified assets distort maintenance planning, resource allocation, and budget forecasting. If Valve 237 is being maintained under a reactive strategy because of its Low criticality label while actually requiring proactive intervention, the cost premium could be 30\u201350% above what a correctly classified and managed asset would incur \u2014 representing approximately $7,000\u2013$11,000 in annual avoidable spend on this asset alone. More broadly, if other assets are similarly misclassified, the systemic budget forecasting error could be material across the portfolio.",
+        "recommendation": "Immediately audit Valve 237's criticality classification using the organization's standard criticality assessment methodology, incorporating failure consequence, production impact, and safety factors. In parallel, run a portfolio-wide screen for assets where actual maintenance spend and variance percentage are inconsistent with their assigned criticality level \u2014 flag any Low or Medium criticality asset with a 12-month variance exceeding 10% for reclassification review. Use corrected classifications to rebuild maintenance strategy assignments and budget baselines for the next planning cycle.",
+        "urgency": "medium",
+        "confidence": "high",
+        "generated_at": "2026-03-12T06:43:50.501127",
+        "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+      }
+    },
+    {
+      "timestamp": "2026-03-13T09:35:02.723755",
+      "insight": {
+        "insight_id": "INS-2026-001",
+        "title": "Age-Related Asset Failures Generating $1.6M+ in Unplanned Repair Costs With Compounding Production Losses",
+        "category": "Risk",
+        "observation": "Top 10 failure events each cost $155K\u2013$193K in repair costs alone, with age-related degradation as the root cause in 6 of 10 cases. Pump 286 ($192,690 repair + $489,802 production loss), Separator 420 ($191,789 + $450,365), Compressor 69 ($155,592 + $413,532), and Reactor 147 ($177,986 + $158,166) are all failing due to end-of-life degradation. Combined repair cost across just these 10 assets exceeds $1.6M, with total production losses surpassing $3.4M. Every one of these was a single-event failure, meaning zero failures were caught in advance.",
+        "impact": "Each unplanned failure event costs $155K\u2013$193K in direct repair plus $158K\u2013$490K in production loss. A single repeat failure on any of these assets in the next 12 months represents a $350K\u2013$680K unbudgeted cost shock. With 6 assets confirmed as age-degraded and no replacement plan in evidence, the probability of recurrence is high. This category of spend is the primary structural driver of the persistent 3.5\u20136.1% monthly budget overrun.",
+        "recommendation": "Immediately commission formal end-of-life condition assessments on the 6 confirmed age-degraded assets: Pump 286, Separator 420, Compressor 69, Reactor 147, Pump 29, and Turbine 162. Prioritize assets by criticality and production loss exposure. Fast-track capital replacement requests for any asset assessed as beyond 80% of design life. Simultaneously deploy vibration and process parameter sensors on these assets to provide early warning coverage while replacement procurement is underway. Target: zero repeat unplanned failures on this cohort within 90 days.",
+        "urgency": "critical",
+        "confidence": "high",
+        "generated_at": "2026-03-13T09:35:01.802662",
+        "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+      }
+    },
+    {
+      "timestamp": "2026-03-13T09:35:02.723755",
+      "insight": {
+        "insight_id": "INS-2026-002",
+        "title": "Contractor Costs Are the Single Largest Maintenance Sub-Cost Driver Across All Departments, Totaling $1.2M+ With No Apparent Spend Controls",
+        "category": "Financial",
+        "observation": "Contractor costs across all 12 completed maintenance department-type combinations range from $119K to $147K per grouping, totaling approximately $1.27M in the trailing 12 months. Critically, contractor spend is consistently the highest or second-highest cost component within every maintenance type \u2014 including preventive and predictive work where contractor use should be minimal. Emergency maintenance in the Maintenance Department alone shows $146,701 in contractor cost against $98,517 in internal labor, meaning contractors cost 49% more than in-house staff for the same emergency work. There is no evidence of spend tiering or pre-approval controls in the data.",
+        "impact": "If contractor rates were reduced by 15% through vendor consolidation and renegotiated master service agreements, the annualized saving would be approximately $190K. If contractor utilization on planned maintenance (preventive/predictive) were reduced by 25% through internal capability building, an additional $130K\u2013$160K in savings is achievable. Combined, a contractor cost optimization program targeting $300K\u2013$350K in annual savings is realistic within 6\u20139 months without reducing maintenance coverage.",
+        "recommendation": "Conduct an immediate contractor spend audit covering: (1) vendor count and rate benchmarking against market rates, (2) identification of recurring contractors on planned work that should be performed by internal staff, (3) establishment of a pre-approval threshold (recommend $10K) for any single contractor engagement. Negotiate consolidated multi-year MSAs with top 3 contractors in exchange for volume commitments and rate reductions. In parallel, assess internal labor capacity \u2014 if contractor use on preventive/predictive work is driven by headcount gaps, build a business case for 1\u20132 additional maintenance technicians whose fully-loaded cost would be breakeven within 12 months versus current contractor spend.",
+        "urgency": "high",
+        "confidence": "high",
+        "generated_at": "2026-03-13T09:35:01.802662",
+        "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+      }
+    },
+    {
+      "timestamp": "2026-03-13T09:35:02.723755",
+      "insight": {
+        "insight_id": "INS-2026-003",
+        "title": "Corrective Maintenance Is the Dominant Cost Category Across All Three Departments, Indicating Preventive Programs Are Failing to Intercept Failures",
+        "category": "Performance",
+        "observation": "Corrective maintenance ranks as the #1 or #2 highest-cost maintenance type in all three departments: Production Corrective ($455,826, 38 WOs), Utilities Corrective ($451,083, 39 WOs), Maintenance Corrective ($418,784, 35 WOs). Combined corrective spend is $1,325,693. Emergency maintenance adds a further $826,119 (Maintenance $416,731, Production $409,388). Total reactive spend (corrective + emergency) is $2,151,812. Preventive and predictive programs exist but collectively spend $1,986,015 \u2014 meaning reactive work is nearly equal in volume to planned work while generating significantly worse outcomes per dollar. Emergency jobs in Production average 2.9 days to complete, the longest of any category, maximizing downtime duration.",
+        "impact": "Industry benchmarks indicate that corrective maintenance costs 3\u20135x more per job than equivalent preventive intervention. If the 112 corrective work orders (across all departments) were reduced by 30% through more effective preventive scheduling \u2014 a conservative target \u2014 this would eliminate approximately 34 reactive jobs. At an average corrective cost of ~$11,800 per WO, this represents a $400K annual saving, with additional production loss avoidance on top. The 2.9-day average completion time for Production emergency jobs further compounds downtime costs that are not fully captured in the maintenance budget.",
+        "recommendation": "Perform a root cause review of all 112 corrective work orders completed in the past 12 months to identify what percentage had a preceding preventive maintenance task that was overdue, skipped, or inadequately scoped. Redesign PM task lists for asset types with the highest corrective frequency (pumps, valves, turbines). Set a KPI target of reducing the corrective-to-total-maintenance ratio from its current ~30% to below 20% within 12 months. Address Production emergency job completion delays specifically \u2014 investigate whether parts availability or technician scheduling is causing the 2.9-day average and implement a fast-response spares kit for the top 10 most failure-prone components.",
+        "urgency": "high",
+        "confidence": "high",
+        "generated_at": "2026-03-13T09:35:01.802662",
+        "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+      }
+    },
+    {
+      "timestamp": "2026-03-13T09:35:02.723755",
+      "insight": {
+        "insight_id": "INS-2026-004",
+        "title": "Improper Installation is the Root Cause of 3 High-Value Failures Costing $531K in Repairs and $938K in Production Losses \u2014 A Preventable Quality Defect",
+        "category": "Risk",
+        "observation": "Three of the top 10 most expensive failure events were caused explicitly by improper installation: Valve 108 (Production, Critical, $186,393 repair, $244,695 production loss), Heat Exchanger 173 (Utilities, High, $178,858 repair, $386,827 production loss), and Heat Exchanger 171 (Utilities, Critical, $166,404 repair, $306,603 production loss). Combined repair cost: $531,655. Combined production loss: $938,125. Total impact: $1,469,780. All three are single-event failures with no prior failure history in the dataset, consistent with installation defects that manifest catastrophically rather than progressively. These failures were entirely preventable at commissioning.",
+        "impact": "At $531,655 in repair costs alone, these three failures represent 25% of total top-20 failure repair spend from a cause that should have a near-zero recurrence rate with proper controls. If even one equivalent installation-defect failure occurs in the next 12 months, the cost is $166K\u2013$186K in repairs plus up to $387K in production loss. The presence of three such failures in a single 12-month window suggests a systemic gap in commissioning quality assurance, not isolated incidents.",
+        "recommendation": "Implement a mandatory post-installation commissioning protocol for all critical and high-criticality assets before they are placed into service. The protocol should include: (1) a third-party or senior engineer sign-off checklist covering mechanical alignment, electrical termination verification, and instrumentation calibration; (2) a 72-hour monitored run-in period with process parameter logging; (3) formal handover documentation retained in the asset management system. Review installation records for Valve 108, Heat Exchanger 173, and Heat Exchanger 171 to identify which contractor or crew performed the work \u2014 if a pattern to a specific vendor or team exists, immediate corrective action and retraining is required. Estimated cost of implementing this protocol: $15K\u2013$25K annually. Expected saving from preventing one equivalent failure: $350K\u2013$570K.",
+        "urgency": "high",
+        "confidence": "high",
+        "generated_at": "2026-03-13T09:35:01.802662",
+        "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+      }
+    },
+    {
+      "timestamp": "2026-03-13T09:35:02.723755",
+      "insight": {
+        "insight_id": "INS-2026-005",
+        "title": "Budget Methodology Is Structurally Flawed \u2014 Variance Has Never Fallen Below 3.5% in 13 Consecutive Months, Indicating Systematic Under-Budgeting",
+        "category": "Strategic",
+        "observation": "Across all 13 months of available data, the budget variance has ranged from 3.5% (October 2025) to 6.1% (December 2025), with a mean of approximately 4.9%. There is not a single month where actual costs came in at or below budget. The variance is not narrowing over time \u2014 December 2025 at 6.1% is the highest variance percentage recorded despite being a lower-cost month by volume ($791K actual). The budget appears to have been constructed without incorporating failure rate history, contractor cost escalation trends, or age-related asset degradation factors. Total actual spend across available months exceeds budgeted spend by approximately $647K cumulatively.",
+        "impact": "A persistent 4.9% average under-budgeting means that for every $1M budgeted, $49K in unplanned funding must be sourced reactively. Projected forward on a $12\u201314M annual spend run-rate (based on observed monthly actuals), this implies $590K\u2013$685K in annual unbudgeted cost that the organization is absorbing without formal allocation. This creates cascading problems: capital projects are deprioritized to cover operational overruns, maintenance is deferred to hit short-term budget targets (worsening the failure rate), and leadership loses confidence in financial forecasting. The 6.1% December variance despite lower absolute spend suggests the problem is intensifying proportionally, not stabilizing.",
+        "recommendation": "Initiate a zero-based budget rebuild for the next fiscal year incorporating three adjustments: (1) replace static historical averages with failure-probability-weighted cost estimates using the last 24 months of failure event data; (2) apply a contractor cost escalation factor of at least 8\u201310% based on observed trends; (3) create a formally budgeted reactive maintenance reserve of 5% of total maintenance budget to absorb unplanned corrective and emergency work orders without triggering variance. Additionally, implement monthly budget reforecasting (rolling 3-month outlook) rather than holding to an annual static budget, allowing early identification of overrun trajectories. This will not reduce actual costs but will eliminate the structural credibility gap in financial reporting and enable better resource prioritization.",
+        "urgency": "medium",
+        "confidence": "high",
+        "generated_at": "2026-03-13T09:35:01.802662",
+        "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+      }
+    },
+    {
+      "timestamp": "2026-03-16T09:10:08.956808",
+      "insight": {
+        "insight_id": "INS-2026-001",
+        "title": "Reactive Maintenance Dominance Driving $2.5M+ Annual Cost Overrun",
+        "category": "Financial",
+        "observation": "Corrective and Emergency maintenance work orders account for 212 of 380 total completed WOs (55.8%), generating $1.34M in corrective and $1.16M in emergency spend \u2014 a reactive-to-proactive ratio of 1.26:1 against an industry target of <0.5:1. This pattern is consistent across all three departments (Production, Utilities, Maintenance) with no department showing a proactive majority. Every single month from July 2025 through March 2026 has recorded a budget overrun, ranging from +2.6% to +6.6%, with November 2025 peaking at $79,796 over budget across 32 assets simultaneously.",
+        "impact": "Reactive maintenance carries a 15\u201330% cost premium over planned work. Emergency work orders in Utilities average $12,727 per WO versus $11,265 for predictive \u2014 a 13% premium per event. Across 212 reactive WOs annually, closing the reactive gap to a 0.7:1 ratio would eliminate approximately 60\u201370 reactive WOs per year, yielding an estimated $336K\u2013$500K in direct maintenance cost reduction, plus secondary reductions in unplanned contractor callouts and emergency parts procurement at premium prices.",
+        "recommendation": "Within 30 days, mandate a departmental PM/PdM schedule increase targeting the 10 highest-overrun assets (Turbines 189 & 113, Pump 144, Valves 66 & 237, Heat Exchanger 499). Set a hard KPI target of reactive-to-proactive ratio below 0.7:1 within 90 days, tracked monthly. Assign a maintenance planner to each department with authority to convert reactive backlog into scheduled work orders. Report ratio progress in monthly budget review.",
+        "urgency": "critical",
+        "confidence": "high",
+        "generated_at": "2026-03-16T09:10:08.862271",
+        "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+      }
+    },
+    {
+      "timestamp": "2026-03-16T09:10:08.956808",
+      "insight": {
+        "insight_id": "INS-2026-002",
+        "title": "Motor 413 and Separator 493 Have Crossed the Economic Repair Threshold \u2014 Immediate Replacement Required",
+        "category": "Risk",
+        "observation": "Motor 413 has failed 9 times with a mean time between failures (MTBF) of 190 hours \u2014 approximately every 8 days \u2014 accumulating $528,174 in repair costs and 568 downtime hours with $786,768 in production loss. Separator 493 has failed 8 times at an MTBF of 149 hours, incurring $418,541 in repair costs, 316 downtime hours, and $1,427,268 in production loss. Both assets are classified Medium and Critical respectively, yet neither shows meaningful operating cost variance improvement, confirming that repair spending is not restoring reliability. Combined, these two assets have consumed $946,715 in repair costs and generated $2,214,036 in production losses.",
+        "impact": "Continued repair-cycle spending on Motor 413 and Separator 493 is projected to cost $400K\u2013$600K in additional repair expenditure over the next 12 months based on current failure frequency, entirely outside the operating budget model. Each Separator 493 failure event generates an average of $178,534 in production loss \u2014 a single additional failure post-decision-delay costs more than most asset replacement budgets. The combined replacement cost for both assets is almost certainly less than one further year of failure-driven costs.",
+        "recommendation": "Immediately initiate capital replacement requests for both Motor 413 and Separator 493. Engage procurement within 5 business days to obtain lead times and replacement cost quotes. While awaiting replacement, place both assets on daily condition monitoring with a defined run-stop threshold (e.g., next failure triggers immediate shutdown rather than repair). Do not authorize further corrective repair spend exceeding $15K on either asset pending capital approval.",
+        "urgency": "critical",
+        "confidence": "high",
+        "generated_at": "2026-03-16T09:10:08.862271",
+        "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+      }
+    },
+    {
+      "timestamp": "2026-03-16T09:10:08.956808",
+      "insight": {
+        "insight_id": "INS-2026-003",
+        "title": "Uncontrolled Emergency Contractor Spend Consuming $398K Annually at Premium Rates With No Frame Agreements",
+        "category": "Financial",
+        "observation": "Contractor costs represent 30\u201335% of every work order type across all departments, with emergency contractor spend alone totaling approximately $398K ($146,701 in Maintenance + $133,815 in Production + $118,179 in Utilities). Contractor costs in emergency scenarios consistently exceed labor costs by 40\u201350% per WO, yet there is no evidence in the data of pre-negotiated frame contracts or standing rate agreements \u2014 all indications point to ad-hoc reactive callouts at spot-market rates. Contractor spend tracks maintenance cost almost dollar-for-dollar across all 13 months of data, confirming it is structurally embedded in the reactive maintenance cycle rather than being discretionary.",
+        "impact": "Ad-hoc emergency contractor rates typically carry a 25\u201340% premium over frame contract rates for the same scope of work. Applying a conservative 20% rate reduction through negotiated frame agreements to the $398K emergency contractor base yields $79,600 in immediate annual savings. Extending frame contracts to cover corrective maintenance contractor spend ($406,785 combined across departments) increases total addressable savings to approximately $161K annually. Additionally, implementing a $5K pre-approval threshold for emergency contractor callouts would create an audit trail currently absent from the cost data.",
+        "recommendation": "Within 45 days, issue RFPs to the top 3 contractors by spend volume for annual frame agreements covering emergency and corrective maintenance services. Target rate reductions of 15\u201325% versus current spot rates, with guaranteed response time SLAs to remove the operational objection to pre-planning. Simultaneously implement a $5K single-event approval gate for all unplanned contractor spend, routed through department heads, to create visibility and slow discretionary callouts. Report contractor spend as a standalone KPI in monthly budget reviews.",
+        "urgency": "high",
+        "confidence": "high",
+        "generated_at": "2026-03-16T09:10:08.862271",
+        "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+      }
+    },
+    {
+      "timestamp": "2026-03-16T09:10:08.956808",
+      "insight": {
+        "insight_id": "INS-2026-004",
+        "title": "Heat Exchanger 173 Represents Catastrophic Single-Event Risk \u2014 485 Downtime Hours Per Failure Cycle",
+        "category": "Risk",
+        "observation": "Heat Exchanger 173 (Utilities, High Criticality) has experienced only 3 failures but generated 485.3 total downtime hours \u2014 an average of 161.8 hours (nearly 7 full days) per failure event \u2014 the highest per-failure downtime of any asset in the dataset. Total repair cost across 3 failures is $536,574 ($178,858 average per event), with $1,160,481 in associated production loss ($386,827 per event). Its MTBF of 306 hours means a fourth failure is statistically due within the next 12.75 days of operational time. The operating cost variance of only +$3,121 confirms this catastrophic failure cost is entirely unbudgeted and invisible in the standard variance reporting.",
+        "impact": "A single additional failure event on Heat Exchanger 173 is expected to cost $178,858 in repairs and $386,827 in production loss \u2014 $565,685 total \u2014 based on the average of prior failures. Given the 306-hour MTBF and the asset's role in Utilities (a shared-service department), each failure has potential cascade effects on downstream production assets. The current budget model records zero reserve for this asset's failure risk, meaning the next event will appear as a full unbudgeted shock. Condition monitoring technology (vibration, thermal imaging, pressure differential sensors) for this asset class typically costs $15,000\u2013$40,000 installed \u2014 an ROI breakeven achievable within weeks of preventing a single failure.",
+        "recommendation": "Within 30 days, commission an engineering assessment of Heat Exchanger 173 to determine the root cause of the extended repair duration (likely internal fouling, tube bundle failure, or seal complexity) and identify whether condition-based monitoring can provide 48\u201372 hours of advance failure warning. Deploy continuous thermal or pressure-differential monitoring immediately at an estimated cost of $20,000\u2013$40,000. Schedule the next planned inspection within 200 operational hours (before the statistical MTBF threshold). Include this asset in the capital replacement evaluation if the engineering assessment identifies end-of-life degradation.",
+        "urgency": "high",
+        "confidence": "high",
+        "generated_at": "2026-03-16T09:10:08.862271",
+        "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
+      }
+    },
+    {
+      "timestamp": "2026-03-16T09:10:08.956808",
+      "insight": {
+        "insight_id": "INS-2026-005",
+        "title": "Budget Model Structural Flaw: Failure Repair Costs Are Invisible, Understating True Overrun by an Estimated 4\u20136x",
+        "category": "Strategic",
+        "observation": "The operating cost variance model captures day-to-day operating expenditure but does not incorporate failure repair costs recorded in FailureEvents. The top 6 failing assets alone have generated $3.13M in repair costs (Separator 420: $605,547; Heat Exchanger 173: $536,574; Valve 77: $533,647; Motor 413: $528,174; Compressor 69: $510,210; Separator 493: $418,541), yet their combined operating cost variance totals only +$49,273 \u2014 less than 1.6% of actual failure-driven spend. The total monthly operating overrun across all 13 months is approximately $578,151, while failure repair costs for just 6 assets exceed $3.13M over a similar period \u2014 indicating the true cost gap is 4\u20136 times larger than budget variance reports suggest. Senior leadership is making budget and resource decisions on incomplete financial data.",
+        "impact": "Underreporting true asset cost by 4\u20136x creates three compounding risks: (1) capital replacement decisions are deferred because assets appear financially manageable in variance reports; (2) annual budget submissions are systematically underestimated, guaranteeing future overruns; (3) high-failure assets like Separator 493 and Motor 413 continue operating past economic life because their true total cost of ownership is never surfaced in a single report. If the $3.13M in failure repair costs for 6 assets were annualized and distributed across the operating budget, the effective variance rate would increase from the reported 3.5\u20136.6% range to an estimated 15\u201325% true overspend against operating intent.",
+        "recommendation": "Within 60 days, redesign the budget reporting framework to produce a unified Total Cost of Asset Ownership (TCAO) view that consolidates OperatingCosts variance, FailureEvents repair costs, and production loss into a single asset-level P&L. Establish a failure reserve fund sized at 8\u201310% of replacement asset value annually for all High and Critical assets, incorporated into the next budget cycle. Present the TCAO report to senior leadership within 90 days alongside the current variance report to quantify the true financial exposure. This is a prerequisite for accurate capital planning and maintenance investment prioritization.",
+        "urgency": "high",
+        "confidence": "high",
+        "generated_at": "2026-03-16T09:10:08.862271",
         "investigation_focus": "Budget overrun analysis - identify cost drivers and recommend cost reduction measures"
       }
     }
